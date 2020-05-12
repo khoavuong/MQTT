@@ -1,51 +1,47 @@
 import React from "react";
 import styled from "styled-components";
-import { Button } from "antd";
+import { Layout, Menu } from "antd";
+import { useHistory } from "react-router-dom";
 
-const StickyWrapper = styled.div`
-  position: sticky;
-  top: 0;
-  z-index: 10;
-`;
+const { Header } = Layout;
 
-const Content = styled.div`
-  padding: 20px 50px 20px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const HrBar = styled.hr`
-  margin: 0;
-  border: 0.3px solid black;
-  opacity: 0.1;
-  padding: 0;
-`;
-
-const Logo = styled.h1`
-  margin: 0;
-`;
-
-const RightMenu = styled.div`
-  display: flex;
+const Logo = styled.div`
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px 16px 0;
+  float: left;
 `;
 
 const NavBar = () => {
+  const history = useHistory();
+
   return (
-    <StickyWrapper>
-      <Content>
-        <Logo>Logo</Logo>
-        <RightMenu>
-          <Button type="primary" style={{ marginLeft: "20px" }}>
-            Home
-          </Button>
-          <Button type="primary" style={{ marginLeft: "20px" }}>
-            Account
-          </Button>
-        </RightMenu>
-      </Content>
-      <HrBar />
-    </StickyWrapper>
+    <Header>
+      <Logo></Logo>
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        defaultSelectedKeys={[history.location.pathname]}
+      >
+        <Menu.Item
+          key="/"
+          onClick={() => {
+            history.push("/");
+          }}
+        >
+          Home
+        </Menu.Item>
+        <Menu.Item
+          key="/account"
+          onClick={() => {
+            history.push("/account");
+          }}
+        >
+          Account
+        </Menu.Item>
+      </Menu>
+    </Header>
   );
 };
 
