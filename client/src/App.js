@@ -12,7 +12,7 @@ export const App = () => {
       <BrowserRouter>
         <NavBar></NavBar>
         <Route path="/" exact component={Home} />
-        <Route path="/account" exact component={Account} />
+        <Route path="/account" component={Account} />
       </BrowserRouter>
     </div>
   );

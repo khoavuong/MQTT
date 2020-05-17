@@ -1,0 +1,41 @@
+.SideBar {
+    max-width: 240px;
+    height: 100vh;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 50vh;
+    background-color: #cce6ff;
+}
+  
+.Item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10vh;
+}
+
+.Content {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.icon {
+    margin-right: 6px;
+}
+
+.text {
+    width: 100%;
+}
+
+.expandarrow {
+    font-size: 1.2rem !important;
+}
+
+.expandarrowexpanded {
+    color: #09bb12;
+    font-weight: bold;
+}

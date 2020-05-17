@@ -1,0 +1,9 @@
+.Account{
+    display: flex;
+}
+.SideBar{
+    width: 20vw;
+}
+.Page{
+    width: 80vw;
+}
