@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Tabs, Collapse, InputNumber, Switch } from "antd";
 import mqtt from "mqtt";
@@ -14,28 +14,17 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-const ContentDisplay = styled.div`
+const FlexBetween = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const options = {
-  protocol: "mqtts",
-};
-const temperatureConnection = mqtt.connect(
-  "mqtt://test.mosquitto.org:8081",
-  options
-);
-const humidityConnection = mqtt.connect(
-  "mqtt://test.mosquitto.org:8081",
-  options
-);
-const fanConnection = mqtt.connect("mqtt://test.mosquitto.org:8081", options);
-const ACConnection = mqtt.connect("mqtt://test.mosquitto.org:8081", options);
-
-temperatureConnection.subscribe("temperature-bku");
-humidityConnection.subscribe("humidity-bku");
+// const test_URL = "mqtt://test.mosquitto.org:8081";
+const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
+const client = mqtt.connect(WebSocket_URL);
+const topics = ["temperature-bku", "humidity-bku"];
+client.subscribe(topics);
 
 export const Home = () => {
   const [temperature, setTemperature] = useState(
@@ -48,26 +37,35 @@ export const Home = () => {
       ? localStorage.getItem("humidity")
       : "Loading"
   );
-  // const [fan, setFan] = useState("Loading");
 
-  temperatureConnection.on("message", function (topic, message) {
-    setTemperature(message.toString());
-    localStorage.setItem("temperature", message.toString());
+  useEffect(() => {
+    return () => {
+      client.unsubscribe(topics);
+    };
+  }, []);
+
+  client.on("message", function (topic, message) {
+    switch (topic) {
+      case "temperature-bku":
+        setTemperature(message.toString());
+        localStorage.setItem("temperature", message.toString());
+        break;
+      case "humidity-bku":
+        setHumidity(message.toString());
+        localStorage.setItem("humidity", message.toString());
+        break;
+      default:
+    }
   });
 
-  humidityConnection.on("message", function (topic, message) {
-    setHumidity(message.toString());
-    localStorage.setItem("humidity", message.toString());
-  });
-
-  function acChange(checked) {
+  function acToggle(checked) {
     localStorage.setItem("ac", checked);
-    ACConnection.publish("ac-bku", checked ? "On" : "Off");
+    client.publish("ac-bku", checked ? "On" : "Off");
   }
 
-  function fanChange(checked) {
+  function fanToggle(checked) {
     localStorage.setItem("fan", checked);
-    fanConnection.publish("fan-bku", checked ? "On" : "Off");
+    client.publish("fan-bku", checked ? "On" : "Off");
   }
 
   return (
@@ -87,36 +85,33 @@ export const Home = () => {
                 <b style={{ color: humidity >= 30 ? "red" : "" }}>{humidity}</b>
               </p>
             </Panel>
-            <Panel header="Phòng ngủ" key="2">
-              <p>Nhiệt độ: 30</p>
-              <p>Độ ẩm: 20</p>
-            </Panel>
+            <Panel header="Phòng ngủ" key="2"></Panel>
           </Collapse>
         </TabPane>
         <TabPane tab="Danh sách thiết bị" key="2">
           <Collapse>
             <Panel header="Phòng khách" key="1">
-              <ContentDisplay style={{ marginBottom: "30px" }}>
+              <FlexBetween style={{ marginBottom: "30px" }}>
                 <div>
                   <b>Máy điều hòa:</b>
                 </div>
-                <ContentDisplay>
+                <FlexBetween>
                   <div style={{ marginRight: "5px" }}>Nhiệt độ: </div>
                   <InputNumber min={1} max={100} defaultValue={25} />
-                </ContentDisplay>
-                <ContentDisplay>
+                </FlexBetween>
+                <FlexBetween>
                   <div style={{ marginRight: "5px" }}>Độ ẩm: </div>
                   <InputNumber min={1} max={100} defaultValue={30} />
-                </ContentDisplay>
+                </FlexBetween>
                 <Switch
                   defaultChecked={
                     localStorage.getItem("ac") === "true" ? true : false
                   }
-                  onChange={acChange}
+                  onChange={acToggle}
                 ></Switch>
-              </ContentDisplay>
+              </FlexBetween>
 
-              <ContentDisplay style={{ marginBottom: "30px" }}>
+              <FlexBetween style={{ marginBottom: "30px" }}>
                 <div>
                   <b>Quạt:</b>
                 </div>
@@ -124,9 +119,9 @@ export const Home = () => {
                   defaultChecked={
                     localStorage.getItem("fan") === "true" ? true : false
                   }
-                  onChange={fanChange}
+                  onChange={fanToggle}
                 ></Switch>
-              </ContentDisplay>
+              </FlexBetween>
             </Panel>
             <Panel header="Phòng ngủ" key="2"></Panel>
           </Collapse>
