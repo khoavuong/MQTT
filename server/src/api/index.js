@@ -1,3 +1,6 @@
-export const a = 5
-export const b = 5
-export const c = 7
+import { Router } from 'express'
+import mqtt from './mqttData'
+
+const api = Router()
+
+export default api
