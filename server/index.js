@@ -1,14 +1,16 @@
-import dotenv from 'dotenv'
-dotenv.config()
-// dotenv.config({
-//   path: `.env${process.env.NODE_ENV === 'test' ? '.test' : ''}`,
-// })
-import { db } from './src/database'
-import server from './server'
-import config from './src/config'
+import express from 'express'
+import bodyParser from 'body-parser'
 
-const PORT = config.port
+import { a, b } from './src/api'
 
-server.listen(PORT, () => {
-  console.log(`App is listening to port ${PORT}`)
+const app = express()
+
+app.use(bodyParser.json())
+
+app.get('/', (req, res) => {
+  res.send('Hello Babel')
+})
+
+app.listen(4000, () => {
+  console.log(`App is listening to port 4000`)
 })

@@ -1,6 +1,3 @@
-import { Router } from 'express'
-import mqtt from './mqttData'
-
-const api = Router()
-
-export default api
+export const a = 5
+export const b = 5
+export const c = 7
