@@ -19,18 +19,20 @@ export default class FormPasswordReset extends Component {
   _handleModalClose = () => {
     this.setState(() => ({
       passChangeSuccess: false,
-    }))
+    }));
+    this.props.modalClosed();
   }
 
   _renderModal = () => {
     const onClick = () => {
       this.setState(() => ({ passChangeSuccess: false }))
-    }
 
+      this.props.modalClosed();
+    }
     return (
       <Alert
         isOpen={this.state.passChangeSuccess}
-        onClose={this._handleClose}
+        onClose={this._handleModalClose}
         handleSubmit={onClick}
         title="Password Reset"
         text="Your password was changed successfully"
@@ -46,7 +48,7 @@ export default class FormPasswordReset extends Component {
     setSubmitting,
     resetForm,
   }) => {
-    // fake async login
+    // fake
     setTimeout(async () => {
       setSubmitting(false)
 

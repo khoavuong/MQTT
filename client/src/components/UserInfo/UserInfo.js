@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Aux from '../../hoc/Aux';
 import Modal from '../Modal/Modal';
 import SetPass from '../SetPass/SetPass';
+import AddUser from '../AddUser/AddUser';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,24 +47,33 @@ const useStyles = makeStyles((theme) => ({
   const UserInfo =(props)=> {
     const classes = useStyles();
     const [changePasswd, setChangePasswd] = useState(false);
+    const [isAddUser, setIsAddUser] = useState(false);
     let modalChild = null;
 
-    function cancelChangePasswd(){
+    function cancelModalHandler(){
       setChangePasswd(false);
+      setIsAddUser(false);
     }
 
     function changePasswdHandler(){
       setChangePasswd(true);
     }
 
+    function addUserHandler(){
+      setIsAddUser(true);
+    }
+
     if (changePasswd){
-      modalChild = <SetPass/>
+      modalChild = <SetPass modalClosed = {cancelModalHandler}/>
+    }
+    else if (isAddUser){
+      modalChild = <AddUser modalClosed = {cancelModalHandler}/>
     }
 
     return(
           <Aux>
 
-            <Modal show = {changePasswd} modalClosed = {cancelChangePasswd}>
+            <Modal show = {changePasswd || isAddUser} modalClosed = {cancelModalHandler}>
               {modalChild}
             </Modal>
 
@@ -110,7 +120,7 @@ const useStyles = makeStyles((theme) => ({
                 </div>
               
               </CardContent>
-              <Button size="small" color="primary">
+              <Button size="small" color="primary" onClick = {addUserHandler}>
                 Add user...
               </Button>
               
