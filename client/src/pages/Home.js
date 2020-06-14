@@ -22,41 +22,35 @@ const FlexBetween = styled.div`
 
 // const test_URL = "mqtt://test.mosquitto.org:8081";
 const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
+// const Demo_URL = "mqtt://13.76.250.158:8083/mqtt";
 const client = mqtt.connect(WebSocket_URL);
-const topics = ["temperature-bku", "humidity-bku"];
+const topics = ["Topic/TempHumi"];
 client.subscribe(topics);
 
 export const Home = () => {
-  const [temperature, setTemperature] = useState(
-    localStorage.getItem("temperature")
-      ? localStorage.getItem("temperature")
-      : "Loading"
-  );
-  const [humidity, setHumidity] = useState(
-    localStorage.getItem("humidity")
-      ? localStorage.getItem("humidity")
-      : "Loading"
-  );
+  const [temperature, setTemperature] = useState("Loading");
+  const [humidity, setHumidity] = useState("Loading");
 
   useEffect(() => {
+    (function () {
+      client.on("message", function (topic, message) {
+        switch (topic) {
+          case "Topic/TempHumi":
+            const content = message.toString().slice(1, message.length - 1);
+            const regExpValue = /\[([^)]+)\]/;
+            const values = regExpValue.exec(content)[1].split(",");
+            setTemperature(parseInt(values[0]));
+            setHumidity(parseInt(values[1]));
+            break;
+          default:
+        }
+      });
+    })();
+
     return () => {
       client.unsubscribe(topics);
     };
   }, []);
-
-  client.on("message", function (topic, message) {
-    switch (topic) {
-      case "temperature-bku":
-        setTemperature(message.toString());
-        localStorage.setItem("temperature", message.toString());
-        break;
-      case "humidity-bku":
-        setHumidity(message.toString());
-        localStorage.setItem("humidity", message.toString());
-        break;
-      default:
-    }
-  });
 
   function acToggle(checked) {
     localStorage.setItem("ac", checked);
