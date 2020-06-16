@@ -5,21 +5,26 @@ import axios from "axios";
 export const Chart = () => {
   const [temperature, setTemperature] = useState([]);
   const [humidity, setHumidity] = useState([]);
+  const [timestamp, setTimestamp] = useState([]);
 
   useEffect(() => {
     (async function () {
       const res = await axios.get(
-        "http://localhost:4000/api/devices/tempHumis"
+        "https://dadn-2020.herokuapp.com/api/devices/tempHumis?fbclid=IwAR0alSqQmHhiresapAW-7kmJybZOG1OXvhRvAwIq4Q7sDq8DJHbS3J3xGDI"
       );
-      setTemperature(res.data.data.map((item) => item.temporature));
-      setHumidity(res.data.data.map((item) => item.humidity));
+      const data = res.data.data;
+      setTemperature(data.map((item) => item.temporature));
+      setHumidity(data.map((item) => item.humidity));
+      setTimestamp(
+        data.map((item) => item.timestamp.slice(11, item.timestamp.length - 5))
+      );
     })();
   }, []);
 
   return (
     <Line
       data={{
-        labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+        labels: timestamp,
         datasets: [
           {
             data: humidity,
