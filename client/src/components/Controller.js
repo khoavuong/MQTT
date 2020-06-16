@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Tabs, Collapse, InputNumber, Switch } from "antd";
+import {
+  Space,
+  Spin,
+  message,
+  Tabs,
+  Collapse,
+  InputNumber,
+  Button,
+} from "antd";
 import mqtt from "mqtt";
 
 const { TabPane } = Tabs;
@@ -8,8 +16,8 @@ const { Panel } = Collapse;
 
 const FlexBetween = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 `;
 
 // const test_URL = "mqtt://test.mosquitto.org:8081";
@@ -19,8 +27,9 @@ const client = mqtt.connect(WebSocket_URL);
 const topics = ["Topic/TempHumi"];
 
 export const Controller = () => {
-  const [temperature, setTemperature] = useState("Loading");
-  const [humidity, setHumidity] = useState("Loading");
+  const [temperature, setTemperature] = useState(<Spin />);
+  const [humidity, setHumidity] = useState(<Spin />);
+  const [devicePower, setDevicePower] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -48,31 +57,40 @@ export const Controller = () => {
     };
   }, []);
 
-  function acToggle(checked) {
-    // localStorage.setItem("ac", checked);
-    // client.publish("ac-bku", checked ? "On" : "Off");
-  }
-
-  function fanToggle(checked) {
-    // localStorage.setItem("fan", checked);
-    // client.publish("fan-bku", checked ? "On" : "Off");
-  }
+  const onPublishClick = () => {
+    if (devicePower != null) {
+      client.publish(
+        "Topic/Speaker",
+        `[{ device_id: "Speaker", values: ["1", "${devicePower}"] }]`,
+        () => {
+          message.success(
+            `Published power level ${devicePower} successfully`,
+            3
+          );
+        }
+      );
+    } else message.error("Please choose a power level for the device", 3);
+  };
 
   return (
     <Tabs>
       <TabPane tab="Nhiệt độ / Độ ẩm" key="1">
         <Collapse>
           <Panel header="Phòng khách" key="1">
-            <p>
-              Nhiệt độ:{" "}
-              <b style={{ color: temperature >= 30 ? "red" : "" }}>
-                {temperature}
-              </b>
-            </p>
-            <p>
-              Độ ẩm:{" "}
-              <b style={{ color: humidity >= 30 ? "red" : "" }}>{humidity}</b>
-            </p>
+            <div>
+              <Space>
+                Nhiệt độ:{" "}
+                <b style={{ color: temperature >= 30 ? "red" : "" }}>
+                  {temperature}
+                </b>
+              </Space>
+            </div>
+            <div>
+              <Space>
+                Độ ẩm:{" "}
+                <b style={{ color: humidity >= 30 ? "red" : "" }}>{humidity}</b>
+              </Space>
+            </div>
           </Panel>
           <Panel header="Phòng ngủ" key="2"></Panel>
         </Collapse>
@@ -80,36 +98,20 @@ export const Controller = () => {
       <TabPane tab="Danh sách thiết bị" key="2">
         <Collapse>
           <Panel header="Phòng khách" key="1">
-            <FlexBetween style={{ marginBottom: "30px" }}>
+            <FlexBetween>
               <div>
-                <b>Máy điều hòa:</b>
+                <b style={{ marginRight: "10px" }}>Speaker: </b>
+                <InputNumber
+                  min={0}
+                  max={5000}
+                  onChange={(value) => {
+                    setDevicePower(value);
+                  }}
+                />
               </div>
-              <FlexBetween>
-                <div style={{ marginRight: "5px" }}>Nhiệt độ: </div>
-                <InputNumber min={1} max={100} defaultValue={25} />
-              </FlexBetween>
-              <FlexBetween>
-                <div style={{ marginRight: "5px" }}>Độ ẩm: </div>
-                <InputNumber min={1} max={100} defaultValue={30} />
-              </FlexBetween>
-              <Switch
-                defaultChecked={
-                  localStorage.getItem("ac") === "true" ? true : false
-                }
-                onChange={acToggle}
-              ></Switch>
-            </FlexBetween>
-
-            <FlexBetween style={{ marginBottom: "30px" }}>
-              <div>
-                <b>Quạt:</b>
-              </div>
-              <Switch
-                defaultChecked={
-                  localStorage.getItem("fan") === "true" ? true : false
-                }
-                onChange={fanToggle}
-              ></Switch>
+              <Button type="primary" onClick={onPublishClick}>
+                Publish
+              </Button>
             </FlexBetween>
           </Panel>
           <Panel header="Phòng ngủ" key="2"></Panel>
