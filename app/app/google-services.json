@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "473140167699",
+    "firebase_url": "https://iotthing.firebaseio.com",
+    "project_id": "iotthing",
+    "storage_bucket": "iotthing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473140167699:android:2de1eda1d8c8ca239e2be6",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473140167699-ode2153gbu684q6h314cvab02qjggads.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg-eT0cBQ0T1BdQKWgSpoZr4kH8FJl2HM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473140167699-ode2153gbu684q6h314cvab02qjggads.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

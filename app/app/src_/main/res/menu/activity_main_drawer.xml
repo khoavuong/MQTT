@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_devices"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Devices"/>
+        <item
+                android:id="@+id/nav_account"
+                android:icon="@android:drawable/btn_star_big_off"
+                android:title="Account"/>
+        <item
+                android:id="@+id/nav_notifications"
+                android:icon="@android:drawable/ic_lock_silent_mode_off"
+                android:title="Notifications"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                    android:id="@+id/nav_email"
+                    android:icon="@android:drawable/ic_dialog_email"
+                    android:title="Email"/>
+            <item
+                    android:id="@+id/nav_about"
+                    android:icon="@android:drawable/ic_menu_info_details"
+                    android:title="About"/>
+        </menu>
+    </item>
+
+</menu>
