@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_device.*
 import layout.dataListHolder
 
 

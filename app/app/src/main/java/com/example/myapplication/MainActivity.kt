@@ -16,6 +16,9 @@ import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseUser
 import java.util.*
 import kotlin.concurrent.schedule
+import FireBaseService
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -68,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             dialog.hide()
         }
         else dialog.hide()
+        startService(Intent(this, FireBaseService::class.java))
 
     }
 

@@ -30,6 +30,10 @@
                 android:label="Account">
         </activity>
         <activity
+            android:name=".NotificationActivity"
+            android:label="Notification">
+        </activity>
+        <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -39,6 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <service android:enabled="true"
+            android:name="FireBaseService">
+        </service>
     </application>
 
 </manifest>

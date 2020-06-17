@@ -9,13 +9,13 @@
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Devices"/>
         <item
+            android:id="@+id/nav_notifications"
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:title="Notifications"/>
+        <item
                 android:id="@+id/nav_account"
                 android:icon="@android:drawable/btn_star_big_off"
                 android:title="Account"/>
-        <item
-                android:id="@+id/nav_notifications"
-                android:icon="@android:drawable/ic_lock_silent_mode_off"
-                android:title="Notifications"/>
     </group>
 
     <item android:title="Communicate">
