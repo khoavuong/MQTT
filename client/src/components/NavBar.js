@@ -40,6 +40,16 @@ const NavBar = () => {
         >
           Account
         </Menu.Item>
+        <Menu.Item
+          key="/logout"
+          onClick={() => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("username");
+            history.push("/signin");
+          }}
+        >
+          Log out
+        </Menu.Item>
       </Menu>
     </Header>
   );
