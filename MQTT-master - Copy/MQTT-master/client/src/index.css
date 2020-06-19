@@ -1,0 +1,122 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* 
+labelCol={{span: 6,}}
+                              wrapperCol={{span: 14,}}
+                              layout="horizontal"
+                            >
+                              <Form.Item label="Type of Device" name="T_">
+                                <Radio.Group onChange={this.onChange} value={value}
+                                defaultValue = {value}
+                                >
+                                    <Radio style={radioStyle} value={0}>
+                                    Temp
+                                    </Radio>
+                                    <Radio style={radioStyle} value={1}>
+                                    Humid
+                                    </Radio>
+                                    <Radio style={radioStyle} value={2}>
+                                    Wind
+                                    </Radio>
+                                </Radio.Group>
+                              </Form.Item>
+                              <Form.Item
+                                help="Fill in"
+                                label="Name"
+                                rules={[
+                                    {
+                                      required: true,
+                                      message: 'Input something!',
+                                    },
+                                  ]}
+                                >
+                                <Input />
+                                </Form.Item>
+                                  
+                              <Form.Item label="Ngày tạo">
+                                <DatePicker 
+                                  defaultValue = {moment()}
+                                  format={'YYYY/MM/DD'}
+                                />
+
+                              </Form.Item>
+                              <Form.Item 
+                              validateStatus={value ===0 ? "error" : null}
+                              help = {value === 0 ? "Pick 0 -100": null}
+                              label="Nhiệt độ">
+                              <span>
+                                <InputNumber min = '0' max = '100'
+                                    disabled = {value !== 0}
+                                />
+                                <td style = {{width : '10px'}}></td>
+                                đơn vị
+                              </span>
+
+                              </Form.Item>
+
+                              <Form.Item 
+                              validateStatus = {value === 1 ? "error" : null}
+                              help= {value === 1 ? "Pick 0 -100": null}
+                              label="Độ ẩm">
+                              <span>
+                                <InputNumber min = '0' max = '100'
+                                    disabled = {value !== 1}
+                                />
+                                <td style = {{width : '10px'}}></td>
+                                đơn vị
+                              </span>
+
+                              </Form.Item>
+
+                              <Form.Item 
+                              validateStatus = {value === 2 ? "error" : null}
+                              help = {value === 2 ? "Pick 0 -100": null}
+                              label="Sức gió">
+                                <Select
+                                    disabled = {value !== 2}
+                                >
+                                  <Select.Option value = "1"> Level 1 </Select.Option>
+                                  <Select.Option value = "2"> Level 2</Select.Option>
+                                </Select>
+                              </Form.Item>
+
+                              <Form.Item label = "Hoạt động ngay">
+                                <Switch defaultChecked/>
+                              </Form.Item>
+                              <Form.Item style = {{textAlign : 'left'}}>
+                                <Button type="primary" htmlType="submit" style = {{width : '90%'}}>
+                                  Submit
+                                </Button>
+                              </Form.Item>
+          <Button
+            style={{
+              margin: '0 8px',
+            }}
+            onClick={() => {
+              form.resetFields();
+            }}
+          >
+            Clear
+          </Button>
+          <a
+            style={{
+              fontSize: 12,
+            }}
+            onClick={() => {
+              setExpand(!expand);
+            }}
+          >
+            {expand ? <UpOutlined /> : <DownOutlined />} Collapse
+          </a>
+    </Form>
+    */
