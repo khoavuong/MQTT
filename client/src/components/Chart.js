@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import axios from "axios";
+import iot from "../api/iot";
 
 export const Chart = () => {
   const [temperature, setTemperature] = useState([]);
@@ -9,9 +9,7 @@ export const Chart = () => {
 
   useEffect(() => {
     (async function () {
-      const res = await axios.get(
-        "https://dadn-2020.herokuapp.com/api/devices/tempHumis?fbclid=IwAR0alSqQmHhiresapAW-7kmJybZOG1OXvhRvAwIq4Q7sDq8DJHbS3J3xGDI"
-      );
+      const res = await iot.get("/api/devices/tempHumis");
       const data = res.data.data;
       setTemperature(data.map((item) => item.temporature));
       setHumidity(data.map((item) => item.humidity));
