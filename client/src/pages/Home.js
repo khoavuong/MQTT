@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Chart } from "../components/Chart";
 import { Controller } from "../components/Controller";
+import NavBar from "../components/NavBar";
+import { Redirect } from "react-router";
 
 const Container = styled.div`
   margin: auto;
@@ -12,11 +14,16 @@ const Container = styled.div`
 `;
 
 export const Home = () => {
+  if (!localStorage.getItem("accessToken")) return <Redirect to="/signin" />;
+
   return (
-    <Container>
-      <Controller></Controller>
-      <br />
-      <Chart></Chart>
-    </Container>
+    <>
+      <NavBar></NavBar>
+      <Container>
+        <Controller></Controller>
+        <br />
+        <Chart></Chart>
+      </Container>
+    </>
   );
 };
