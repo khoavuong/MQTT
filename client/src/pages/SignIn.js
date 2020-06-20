@@ -8,6 +8,7 @@ import {
   Form,
   FormGroup,
   Input,
+  Spinner,
 } from "reactstrap";
 import styled from "styled-components";
 import iot from "../api/iot";
@@ -22,10 +23,25 @@ const FormWrapper = styled.div`
   background-color: #434e5e;
 `;
 
+const MidSpinner = () => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: "10px",
+    }}
+  >
+    <Spinner></Spinner>
+  </div>
+);
+
 export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(null);
+
   const history = useHistory();
   if (localStorage.getItem("accessToken")) return <Redirect to="/" />;
 
@@ -36,6 +52,7 @@ export const SignIn = () => {
   const formSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(<MidSpinner />);
     iot
       .post("/api/auth/login", {
         email,
@@ -44,10 +61,12 @@ export const SignIn = () => {
       .then((res) => {
         localStorage.setItem("accessToken", res.data.data.accessToken);
         localStorage.setItem("username", res.data.data.user.name);
+        setLoading(null);
         history.push("/");
       })
       .catch((err) => {
         const errMsg = err.response.data.message;
+        setLoading(null);
         setError(errMsg);
       });
   };
@@ -58,7 +77,7 @@ export const SignIn = () => {
         <CardBody>
           <h1>Hello!</h1>
           <p>Fill in your email and password to sign in.</p>
-          {error && <ErrorMessage message={error} />}
+          {(error && <ErrorMessage message={error} />) || loading}
 
           <Form onSubmit={formSubmit}>
             <FormGroup row>
