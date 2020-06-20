@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
@@ -11,6 +11,7 @@ import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
 import SetPass from "../SetPass/SetPass";
 import AddUser from "../AddUser/AddUser";
+import iot from '../../api/iot';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +49,33 @@ const UserInfo = (props) => {
   const classes = useStyles();
   const [changePasswd, setChangePasswd] = useState(false);
   const [isAddUser, setIsAddUser] = useState(false);
+  const [info, setInfo] = useState({
+    username: '',
+    fullname: '',
+  });
+  
+
+  useEffect(()=>{
+    async function getData(){
+      try{
+        const result = await iot.get('/api/users', {
+          headers:{
+            Authorization: localStorage.getItem("accessToken")
+          }
+        });
+        console.log(result);
+        if(info.username === '')
+          setInfo({
+            username: result.data.data.user.email,
+            fullname: result.data.data.user.name
+          });
+      } catch(error){
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
+
   let modalChild = null;
 
   function cancelModalHandler() {
@@ -89,7 +117,7 @@ const UserInfo = (props) => {
               Full name:
             </Typography>
             <Typography variant="body2" component="h3">
-              admin
+              {info.fullname}
             </Typography>
           </div>
           <div className={classes.field}>
@@ -97,7 +125,7 @@ const UserInfo = (props) => {
               Username:
             </Typography>
             <Typography variant="body2" component="h3">
-              admin
+              {info.username}
             </Typography>
           </div>
           <Button size="small" color="primary" onClick={changePasswdHandler}>
