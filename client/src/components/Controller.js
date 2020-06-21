@@ -1,55 +1,37 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import {
-  Space,
-  Spin,
-  message,
-  Tabs,
-  Collapse,
-  InputNumber,
-  Button,
-} from "antd";
+import { Tabs, Collapse } from "antd";
 import mqtt from "mqtt";
+import { Publisher } from "./Publisher";
+import { Subscriber } from "./Subscriber";
+import { NewLocation } from "./NewLocation";
+import { NewDevice } from "./NewDevice";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
-const FlexBetween = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-// const test_URL = "mqtt://test.mosquitto.org:8081";
-const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
 // const Demo_URL = "mqtt://13.76.250.158:8083/mqtt";
+const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
 const client = mqtt.connect(WebSocket_URL);
-const topics = ["Topic/TempHumi"];
+const topics = ["Topic/TempHumi1"];
 
 export const Controller = () => {
-  const [temperature, setTemperature] = useState(<Spin />);
-  const [humidity, setHumidity] = useState(<Spin />);
-  const [devicePower, setDevicePower] = useState(null);
+  const [locations, setLocations] = useState([]);
+  const [mqttPayload, setMqttPayload] = useState([]);
 
+  // Subscribe MQTT
   useEffect(() => {
     let mounted = true;
-    (function () {
-      client.subscribe(topics);
-      client.on("message", function (topic, message) {
-        switch (topic) {
-          case "Topic/TempHumi":
-            const content = message.toString().slice(1, message.length - 1);
-            const regExpValue = /\[([^)]+)\]/;
-            const values = regExpValue.exec(content)[1].split(",");
-            if (mounted) {
-              setTemperature(parseInt(values[0]));
-              setHumidity(parseInt(values[1]));
-            }
-            break;
-          default:
-        }
-      });
-    })();
+
+    client.subscribe(topics);
+    client.on("message", function (topic, message) {
+      message = message.toString().replace(/ /g, ""); // Remove all white spaces
+      const JSONmessage = message // Turn the string in to JSON format
+        .replace(/device_id/g, '"device_id"')
+        .replace(/values/g, '"values"')
+        .replace(/:([^[]*?),/g, ':"$1",');
+      const payload = JSON.parse(JSONmessage);
+      if (mounted) setMqttPayload(payload);
+    });
 
     return () => {
       client.unsubscribe(topics);
@@ -57,65 +39,84 @@ export const Controller = () => {
     };
   }, []);
 
-  const onPublishClick = () => {
-    if (devicePower != null) {
-      client.publish(
-        "Topic/Speaker",
-        `[{ device_id: "Speaker", values: ["1", "${devicePower}"] }]`,
-        () => {
-          message.success(
-            `Published power level ${devicePower} successfully`,
-            3
-          );
-        }
-      );
-    } else message.error("Please choose a power level for the device", 3);
+  // Fetch Data
+  useEffect(() => {
+    const delay = (m) => new Promise((r) => setTimeout(r, m)); // Mimic api call
+
+    (async () => {
+      let locationsFetch;
+      await delay(1000);
+      locationsFetch = [
+        {
+          name: "Phòng ngủ",
+          sensors: ["TempHumi1", "TempHumi2"],
+          speakers: ["Speaker1"],
+        },
+        {
+          name: "Phòng khách",
+          sensors: ["TempHumi3", "TempHumi4"],
+          speakers: ["Speaker2", "Speaker3"],
+        },
+      ];
+
+      setLocations(locationsFetch);
+    })();
+  }, []);
+
+  const renderlocations = () => {
+    return (
+      <>
+        {locations.map((location) => (
+          <Panel header={location.name} key={location.name}>
+            {location.sensors &&
+              location.sensors.map((sensor) => (
+                <Subscriber
+                  key={sensor}
+                  sensor={sensor}
+                  mqttPayload={mqttPayload}
+                ></Subscriber>
+              ))}
+            <NewDevice
+              locationName={location.name}
+              locations={locations}
+              setLocations={setLocations}
+              title="sensor"
+            />
+
+            <hr style={{ backgroundColor: "black" }}></hr>
+
+            {location.speakers &&
+              location.speakers.map((speaker) => (
+                <Publisher
+                  key={speaker}
+                  speaker={speaker}
+                  client={client}
+                ></Publisher>
+              ))}
+            <NewDevice
+              locationName={location.name}
+              locations={locations}
+              setLocations={setLocations}
+              title="speaker"
+            />
+          </Panel>
+        ))}
+      </>
+    );
   };
 
   return (
-    <Tabs>
-      <TabPane tab="Nhiệt độ / Độ ẩm" key="1">
-        <Collapse>
-          <Panel header="Phòng khách" key="1">
-            <div>
-              <Space>
-                Nhiệt độ:{" "}
-                <b style={{ color: temperature >= 30 ? "red" : "" }}>
-                  {temperature}
-                </b>
-              </Space>
-            </div>
-            <div>
-              <Space>
-                Độ ẩm:{" "}
-                <b style={{ color: humidity >= 30 ? "red" : "" }}>{humidity}</b>
-              </Space>
-            </div>
-          </Panel>
-          <Panel header="Phòng ngủ" key="2"></Panel>
-        </Collapse>
-      </TabPane>
-      <TabPane tab="Danh sách thiết bị" key="2">
-        <Collapse>
-          <Panel header="Phòng khách" key="1">
-            <FlexBetween>
-              <div>
-                <b style={{ marginRight: "10px" }}>Speaker: </b>
-                <InputNumber
-                  min={0}
-                  max={5000}
-                  onChange={(value) => {
-                    setDevicePower(value);
-                  }}
-                />
-              </div>
-              <Button type="primary" onClick={onPublishClick}>
-                Publish
-              </Button>
-            </FlexBetween>
-          </Panel>
-          <Panel header="Phòng ngủ" key="2"></Panel>
-        </Collapse>
+    <Tabs
+      tabBarExtraContent={
+        <NewLocation
+          setLocations={setLocations}
+          locations={locations}
+          title="vị trí"
+        />
+      }
+    >
+      <TabPane tab="Sensors & Speakers" key="1">
+        <Collapse>{renderlocations()}</Collapse>
       </TabPane>
     </Tabs>
   );
