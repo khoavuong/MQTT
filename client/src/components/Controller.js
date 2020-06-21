@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Collapse } from "antd";
+import { Tabs, Collapse, Spin } from "antd";
 import mqtt from "mqtt";
 import { Publisher } from "./Publisher";
 import { Subscriber } from "./Subscriber";
@@ -17,6 +17,7 @@ const topics = ["Topic/TempHumi1"];
 export const Controller = () => {
   const [locations, setLocations] = useState([]);
   const [mqttPayload, setMqttPayload] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Subscribe MQTT
   useEffect(() => {
@@ -45,7 +46,8 @@ export const Controller = () => {
 
     (async () => {
       let locationsFetch;
-      await delay(1000);
+      await delay(1500);
+      setLoading(false);
       locationsFetch = [
         {
           name: "Phòng ngủ",
@@ -116,7 +118,13 @@ export const Controller = () => {
       }
     >
       <TabPane tab="Sensors & Speakers" key="1">
-        <Collapse>{renderlocations()}</Collapse>
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Spin />
+          </div>
+        ) : (
+          <Collapse>{renderlocations()}</Collapse>
+        )}
       </TabPane>
     </Tabs>
   );
