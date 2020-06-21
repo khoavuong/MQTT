@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Chart } from "../components/Chart";
 import { Controller } from "../components/Controller";
 import NavBar from "../components/NavBar";
 import { Redirect } from "react-router";
@@ -22,7 +21,6 @@ export const Home = () => {
       <Container>
         <Controller></Controller>
         <br />
-        <Chart></Chart>
       </Container>
     </>
   );
