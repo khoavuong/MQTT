@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    borderWidth: "5px",
+    borderWidth: "10px",
     zIndex: "50",
     borderColor: "black",
   },
@@ -74,7 +74,7 @@ const UserInfo = (props) => {
       }
     }
     getData();
-  }, []);
+  });
 
   let modalChild = null;
 

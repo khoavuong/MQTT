@@ -2,8 +2,8 @@
     max-width: 240px;
     height: 100vh;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: 50vh;
+    position: absolute;
+    width: 50vw;
     background-color: #cce6ff;
 }
   

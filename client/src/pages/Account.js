@@ -8,6 +8,7 @@ import UserInfo from "../components/UserInfo/UserInfo";
 import style from "./Account.module.css";
 import NavBar from "../components/NavBar";
 import { Redirect } from "react-router";
+import {Chart} from '../components/Chart';
 
 const items = [
   {
@@ -25,6 +26,7 @@ const items = [
       {
         name: "generalLogs",
         label: "General Logs",
+        url: "/account/general-log"
       },
       {
         name: "detailedLogs",
@@ -53,6 +55,7 @@ export const Account = (props) => {
         </div>
         <div className={style.Page}>
           <Route path="/account/info" component={UserInfo} />
+          <Route path="/account/general-log" component={Chart} />
         </div>
       </div>
     </>
