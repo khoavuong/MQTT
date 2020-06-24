@@ -23,6 +23,7 @@ class SidebarItem extends Component{
             this.toggleCollapsed();
         }
         if (this.props.item.url) {
+            console.log(this.props.item.url);
             this.props.history.push(this.props.item.url);
         }
     }
@@ -71,6 +72,7 @@ class SidebarItem extends Component{
                         depth={this.props.depth + 1}
                         depthStep={this.props.depthStep}
                         item={subItem}
+                        history={this.props.history}
                         />
                     )}
                     </React.Fragment>
