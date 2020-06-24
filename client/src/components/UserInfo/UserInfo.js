@@ -11,7 +11,7 @@ import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
 import SetPass from "../SetPass/SetPass";
 import AddUser from "../AddUser/AddUser";
-import iot from '../../api/iot';
+import iot from "../../api/iot";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,31 +50,31 @@ const UserInfo = (props) => {
   const [changePasswd, setChangePasswd] = useState(false);
   const [isAddUser, setIsAddUser] = useState(false);
   const [info, setInfo] = useState({
-    username: '',
-    fullname: '',
+    username: "",
+    fullname: "",
   });
-  
 
-  useEffect(()=>{
-    async function getData(){
-      try{
-        const result = await iot.get('/api/users', {
-          headers:{
-            Authorization: localStorage.getItem("accessToken")
-          }
+  useEffect(() => {
+    (async function getData() {
+      console.log(localStorage.getItem("accessToken"));
+      try {
+        const result = await iot.get("/api/users", {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
         });
         console.log(result);
-        if(info.username === '')
-          setInfo({
-            username: result.data.data.user.email,
-            fullname: result.data.data.user.name
-          });
-      } catch(error){
+        // if (info.username === "")
+        setInfo({
+          username: result.data.data.user.email,
+          fullname: result.data.data.user.name,
+        });
+      } catch (error) {
         console.log(error);
       }
-    }
-    getData();
-  });
+    })();
+    // getData();
+  }, [isAddUser, changePasswd]);
 
   let modalChild = null;
 
