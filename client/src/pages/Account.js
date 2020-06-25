@@ -9,6 +9,7 @@ import style from "./Account.module.css";
 import NavBar from "../components/NavBar";
 import { Redirect } from "react-router";
 import GeneralLog from "../components/GeneralLog/GeneralLog";
+import { DeviceManage } from "../components/DeviceManage/DeviceManage";
 
 const items = [
   {
@@ -38,6 +39,7 @@ const items = [
   {
     name: "manageDevices",
     label: "Manage Devices",
+    url: "/account/device",
     Icon: ToysIcon,
   },
 ];
@@ -56,6 +58,7 @@ export const Account = (props) => {
         <div className={style.Page}>
           <Route path="/account/info" component={UserInfo} />
           <Route path="/account/general-log" component={GeneralLog} />
+          <Route path="/account/device" component={DeviceManage} />
         </div>
       </div>
     </>
