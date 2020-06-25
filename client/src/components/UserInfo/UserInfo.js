@@ -11,7 +11,7 @@ import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
 import SetPass from "../SetPass/SetPass";
 import AddUser from "../AddUser/AddUser";
-import iot from '../../api/iot';
+import iot from "../../api/iot";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,59 +48,56 @@ const useStyles = makeStyles((theme) => ({
 const UserInfo = (props) => {
   const classes = useStyles();
   const [changePasswd, setChangePasswd] = useState(false);
-  const [isAddUser, setIsAddUser] = useState(false);
+  // const [isAddUser, setIsAddUser] = useState(false);
   const [info, setInfo] = useState({
-    username: '',
-    fullname: '',
+    username: "",
+    fullname: "",
   });
-  
 
-  useEffect(()=>{
-    async function getData(){
-      try{
-        const result = await iot.get('/api/users', {
-          headers:{
-            Authorization: localStorage.getItem("accessToken")
-          }
+  useEffect(() => {
+    (async function getData() {
+      console.log(localStorage.getItem("accessToken"));
+      try {
+        const result = await iot.get("/api/users", {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
         });
         console.log(result);
-        if(info.username === '')
-          setInfo({
-            username: result.data.data.user.email,
-            fullname: result.data.data.user.name
-          });
-      } catch(error){
+        // if (info.username === "")
+        setInfo({
+          username: result.data.data.user.email,
+          fullname: result.data.data.user.name,
+        });
+      } catch (error) {
         console.log(error);
       }
-    }
-    getData();
-  });
+    })();
+    // getData();
+  }, []);
 
-  let modalChild = null;
-
-  function cancelModalHandler() {
-    setChangePasswd(false);
-    setIsAddUser(false);
+  function cancelModalHandler(modalNumber) {
+    if (modalNumber === 1) setChangePasswd(false);
   }
 
   function changePasswdHandler() {
     setChangePasswd(true);
   }
 
-  function addUserHandler() {
-    setIsAddUser(true);
-  }
+  // function addUserHandler() {
+  //   setIsAddUser(true);
+  // }
 
-  if (changePasswd) {
-    modalChild = <SetPass modalClosed={cancelModalHandler} />;
-  } else if (isAddUser) {
-    modalChild = <AddUser modalClosed={cancelModalHandler} />;
-  }
+  // if (changePasswd) {
+  //   modalChild = <SetPass modalClosed={cancelModalHandler} />;
+  // } else if (isAddUser) {
+  //   modalChild = <AddUser modalClosed={cancelModalHandler} />;
+  // }
 
   return (
     <Aus>
-      <Modal show={changePasswd || isAddUser} modalClosed={cancelModalHandler}>
-        {modalChild}
+      <Modal show={changePasswd} modalClosed={() => cancelModalHandler(1)}>
+        <SetPass modalClosed={() => cancelModalHandler(1)} />
       </Modal>
 
       <Card className={classes.root}>
@@ -140,9 +137,9 @@ const UserInfo = (props) => {
             </Typography>
           </div>
         </CardContent>
-        <Button size="small" color="primary" onClick={addUserHandler}>
+        {/* <Button size="small" color="primary" onClick={addUserHandler}>
           Add user...
-        </Button>
+        </Button> */}
       </Card>
     </Aus>
   );

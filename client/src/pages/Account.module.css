@@ -1,10 +1,12 @@
-.Account{
-    display: flex;
+.Account {
+  display: flex;
 }
-.SideBar{
-    width: 20vw;
+.SideBar {
+  width: 20vw;
 }
-.Page{
-    width: 80vw;
-    align-items: center;
+.Page {
+  width: 80vw;
+  align-items: center;
+  height: 100vh;
+  overflow-y: scroll;
 }

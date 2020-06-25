@@ -8,7 +8,8 @@ import UserInfo from "../components/UserInfo/UserInfo";
 import style from "./Account.module.css";
 import NavBar from "../components/NavBar";
 import { Redirect } from "react-router";
-import {Chart} from '../components/Chart';
+import GeneralLog from "../components/GeneralLog/GeneralLog";
+import { DeviceManage } from "../components/DeviceManage/DeviceManage";
 
 const items = [
   {
@@ -26,7 +27,7 @@ const items = [
       {
         name: "generalLogs",
         label: "General Logs",
-        url: "/account/general-log"
+        url: "/account/general-log",
       },
       {
         name: "detailedLogs",
@@ -38,6 +39,7 @@ const items = [
   {
     name: "manageDevices",
     label: "Manage Devices",
+    url: "/account/device",
     Icon: ToysIcon,
   },
 ];
@@ -45,7 +47,7 @@ const items = [
 export const Account = (props) => {
   if (!localStorage.getItem("accessToken")) return <Redirect to="/signin" />;
 
-  console.log(props);
+  // console.log(props);
   return (
     <>
       <NavBar></NavBar>
@@ -55,7 +57,8 @@ export const Account = (props) => {
         </div>
         <div className={style.Page}>
           <Route path="/account/info" component={UserInfo} />
-          <Route path="/account/general-log" component={Chart} />
+          <Route path="/account/general-log" component={GeneralLog} />
+          <Route path="/account/device" component={DeviceManage} />
         </div>
       </div>
     </>
