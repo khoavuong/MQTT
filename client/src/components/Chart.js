@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import iot from "../api/iot";
+import Spinner from "./Spinner/Spinner";
 
 function checkinRange(timestamp, range) {
   var now = new Date();
@@ -19,6 +20,7 @@ export const Chart = (props) => {
   const [temperature, setTemperature] = useState([]);
   const [humidity, setHumidity] = useState([]);
   const [timestamp, setTimestamp] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async function () {
@@ -35,8 +37,13 @@ export const Chart = (props) => {
           item.timestamp.slice(5, item.timestamp.length - 5)
         )
       );
+      setIsLoading(false);
     })();
   }, [props.range]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Line

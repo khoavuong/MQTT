@@ -1,31 +1,31 @@
-import React, {useState} from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Grid from '@material-ui/core/Grid';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { Radio } from '@material-ui/core';
-import Alert from '../SetPass/Alert';
+import React, { useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Grid from "@material-ui/core/Grid";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { Radio } from "@material-ui/core";
+import Alert from "../SetPass/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -35,34 +35,36 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddUser(props) {
   const classes = useStyles();
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [userName, setUserName] = useState('');
-	const [passwd, setPasswd] = useState('');
-	const [addUserSuccess, setAddUserSuccess] =  useState(false);
-  function handleAddUser(){
-		setAddUserSuccess(true);
-	}
-	function _handleModalClose(){
-		setAddUserSuccess(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [passwd, setPasswd] = useState("");
+  const [addUserSuccess, setAddUserSuccess] = useState(false);
+  function handleAddUser() {
+    setAddUserSuccess(true);
+  }
+  function _handleModalClose() {
+    console.log("_handleModalClose");
+    setAddUserSuccess(false);
 
     //props.modalClosed();
-	}
-	function handleSubmit(){
-		setAddUserSuccess(false);
-	}
-	function _renderAlert(){
-		
-		return <Alert
-						isOpen={addUserSuccess}
-						handleClose={_handleModalClose}
-						handleSubmit={handleSubmit}
-						title="Create Account"
-						text="User have been added !!"
-						submitButtonText="Done"
-						hasTwoButtons
-					/>
-	}
+  }
+  function handleSubmit() {
+    setAddUserSuccess(false);
+  }
+  function _renderAlert() {
+    return (
+      <Alert
+        isOpen={addUserSuccess}
+        handleClose={_handleModalClose}
+        handleSubmit={handleSubmit}
+        title="Create Account"
+        text="User have been added !!"
+        submitButtonText="Done"
+        hasTwoButtons
+      />
+    );
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -122,10 +124,18 @@ export default function AddUser(props) {
               />
             </Grid>
             <Grid item xs={12}>
-							<RadioGroup aria-label="gender" name="gender1" >
-								<FormControlLabel value="admin" control={<Radio />} label="Admin" />
-								<FormControlLabel value="guest" control={<Radio />} label="Guest" />
-							</RadioGroup>
+              <RadioGroup aria-label="gender" name="gender1">
+                <FormControlLabel
+                  value="admin"
+                  control={<Radio />}
+                  label="Admin"
+                />
+                <FormControlLabel
+                  value="guest"
+                  control={<Radio />}
+                  label="Guest"
+                />
+              </RadioGroup>
             </Grid>
           </Grid>
           <Button
@@ -139,7 +149,7 @@ export default function AddUser(props) {
             Add this user
           </Button>
         </form>
-				{_renderAlert()}
+        {/* {_renderAlert()} */}
       </div>
     </Container>
   );

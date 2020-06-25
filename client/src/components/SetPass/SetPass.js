@@ -1,34 +1,34 @@
-import React, { Component } from 'react'
-import { Formik } from 'formik'
-import { object, ref, string } from 'yup'
-import Input from '@material-ui/core/Input'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
+import React, { Component } from "react";
+import { Formik } from "formik";
+import { object, ref, string } from "yup";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
 
-import Spinner from '../Spinner/Spinner';
-import Alert from './Alert'
+import Spinner from "../Spinner/Spinner";
+import Alert from "./Alert";
 
 export default class FormPasswordReset extends Component {
   state = {
     passChangeSuccess: false,
-  }
+  };
 
   _handleModalClose = () => {
     this.setState(() => ({
       passChangeSuccess: false,
     }));
     this.props.modalClosed();
-  }
+  };
 
   _renderModal = () => {
     const onClick = () => {
-      this.setState(() => ({ passChangeSuccess: false }))
+      this.setState(() => ({ passChangeSuccess: false }));
 
       this.props.modalClosed();
-    }
+    };
     return (
       <Alert
         isOpen={this.state.passChangeSuccess}
@@ -38,8 +38,8 @@ export default class FormPasswordReset extends Component {
         text="Your password was changed successfully"
         submitButtonText="Done"
       />
-    )
-  }
+    );
+  };
 
   _handleSubmit = ({
     currentPass,
@@ -50,30 +50,30 @@ export default class FormPasswordReset extends Component {
   }) => {
     // fake
     setTimeout(async () => {
-      setSubmitting(false)
+      setSubmitting(false);
 
       this.setState(() => ({
         passChangeSuccess: true,
-      }))
+      }));
 
-      resetForm()
-    }, 1000)
-  }
+      resetForm();
+    }, 1000);
+  };
 
   render() {
     return (
       <Formik
         initialValues={{
-          currentPass: '',
-          newPass: '',
-          confirmPass: '',
+          currentPass: "",
+          newPass: "",
+          confirmPass: "",
         }}
         validationSchema={object().shape({
-          currentPass: string().required('Current password is required'),
-          newPass: string().required('New password is required'),
+          currentPass: string().required("Current password is required"),
+          newPass: string().required("New password is required"),
           confirmPass: string()
-            .oneOf([ref('newPass')], 'Passwords do not match')
-            .required('Password is required'),
+            .oneOf([ref("newPass")], "Passwords do not match")
+            .required("Password is required"),
         })}
         onSubmit={(
           { currentPass, newPass, confirmPass },
@@ -87,7 +87,8 @@ export default class FormPasswordReset extends Component {
             resetForm,
           })
         }
-        render={props => {
+      >
+        {(props) => {
           const {
             values,
             touched,
@@ -97,7 +98,7 @@ export default class FormPasswordReset extends Component {
             handleSubmit,
             isValid,
             isSubmitting,
-          } = props
+          } = props;
           return isSubmitting ? (
             <Spinner />
           ) : (
@@ -108,7 +109,7 @@ export default class FormPasswordReset extends Component {
                     htmlFor="password-current"
                     error={Boolean(touched.currentPass && errors.currentPass)}
                   >
-                    {'Current Password'}
+                    {"Current Password"}
                   </InputLabel>
                   <Input
                     id="password-current"
@@ -124,7 +125,7 @@ export default class FormPasswordReset extends Component {
                   >
                     {touched.currentPass && errors.currentPass
                       ? errors.currentPass
-                      : ''}
+                      : ""}
                   </FormHelperText>
                 </FormControl>
                 <FormControl
@@ -136,7 +137,7 @@ export default class FormPasswordReset extends Component {
                     htmlFor="password-new"
                     error={Boolean(touched.newPass && errors.newPass)}
                   >
-                    {'New Password'}
+                    {"New Password"}
                   </InputLabel>
                   <Input
                     id="password-new"
@@ -150,7 +151,7 @@ export default class FormPasswordReset extends Component {
                   <FormHelperText
                     error={Boolean(touched.newPass && errors.newPass)}
                   >
-                    {touched.newPass && errors.newPass ? errors.newPass : ''}
+                    {touched.newPass && errors.newPass ? errors.newPass : ""}
                   </FormHelperText>
                 </FormControl>
                 <FormControl
@@ -162,7 +163,7 @@ export default class FormPasswordReset extends Component {
                     htmlFor="password-confirm"
                     error={Boolean(touched.confirmPass && errors.confirmPass)}
                   >
-                    {'Confirm Password'}
+                    {"Confirm Password"}
                   </InputLabel>
                   <Input
                     id="password-confirm"
@@ -178,7 +179,7 @@ export default class FormPasswordReset extends Component {
                   >
                     {touched.confirmPass && errors.confirmPass
                       ? errors.confirmPass
-                      : ''}
+                      : ""}
                   </FormHelperText>
                 </FormControl>
                 <Button
@@ -186,16 +187,16 @@ export default class FormPasswordReset extends Component {
                   variant="raised"
                   color="primary"
                   disabled={Boolean(!isValid || isSubmitting)}
-                  style={{ margin: '16px' }}
+                  style={{ margin: "16px" }}
                 >
-                  {'Reset Password'}
+                  {"Reset Password"}
                 </Button>
               </form>
-              {this._renderModal()}
+              {/* {this._renderModal()} */}
             </Paper>
-          )
+          );
         }}
-      />
-    )
+      </Formik>
+    );
   }
 }

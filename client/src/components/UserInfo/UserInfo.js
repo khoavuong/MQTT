@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const UserInfo = (props) => {
   const classes = useStyles();
   const [changePasswd, setChangePasswd] = useState(false);
-  const [isAddUser, setIsAddUser] = useState(false);
+  // const [isAddUser, setIsAddUser] = useState(false);
   const [info, setInfo] = useState({
     username: "",
     fullname: "",
@@ -74,33 +74,30 @@ const UserInfo = (props) => {
       }
     })();
     // getData();
-  }, [isAddUser, changePasswd]);
+  }, []);
 
-  let modalChild = null;
-
-  function cancelModalHandler() {
-    setChangePasswd(false);
-    setIsAddUser(false);
+  function cancelModalHandler(modalNumber) {
+    if (modalNumber === 1) setChangePasswd(false);
   }
 
   function changePasswdHandler() {
     setChangePasswd(true);
   }
 
-  function addUserHandler() {
-    setIsAddUser(true);
-  }
+  // function addUserHandler() {
+  //   setIsAddUser(true);
+  // }
 
-  if (changePasswd) {
-    modalChild = <SetPass modalClosed={cancelModalHandler} />;
-  } else if (isAddUser) {
-    modalChild = <AddUser modalClosed={cancelModalHandler} />;
-  }
+  // if (changePasswd) {
+  //   modalChild = <SetPass modalClosed={cancelModalHandler} />;
+  // } else if (isAddUser) {
+  //   modalChild = <AddUser modalClosed={cancelModalHandler} />;
+  // }
 
   return (
     <Aus>
-      <Modal show={changePasswd || isAddUser} modalClosed={cancelModalHandler}>
-        {modalChild}
+      <Modal show={changePasswd} modalClosed={() => cancelModalHandler(1)}>
+        <SetPass modalClosed={() => cancelModalHandler(1)} />
       </Modal>
 
       <Card className={classes.root}>
@@ -140,9 +137,9 @@ const UserInfo = (props) => {
             </Typography>
           </div>
         </CardContent>
-        <Button size="small" color="primary" onClick={addUserHandler}>
+        {/* <Button size="small" color="primary" onClick={addUserHandler}>
           Add user...
-        </Button>
+        </Button> */}
       </Card>
     </Aus>
   );

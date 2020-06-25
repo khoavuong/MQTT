@@ -45,7 +45,7 @@ const items = [
 export const Account = (props) => {
   if (!localStorage.getItem("accessToken")) return <Redirect to="/signin" />;
 
-  console.log(props);
+  // console.log(props);
   return (
     <>
       <NavBar></NavBar>
