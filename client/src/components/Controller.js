@@ -4,7 +4,6 @@ import mqtt from "mqtt";
 import { Publisher } from "./Publisher";
 import { Subscriber } from "./Subscriber";
 import { NewLocation } from "./NewLocation";
-import { NewDevice } from "./NewDevice";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -30,8 +29,13 @@ export const Controller = () => {
         .replace(/device_id/g, '"device_id"')
         .replace(/values/g, '"values"')
         .replace(/:([^[]*?),/g, ':"$1",');
-      const payload = JSON.parse(JSONmessage);
-      if (mounted) setMqttPayload(payload);
+
+      try {
+        const payload = JSON.parse(JSONmessage);
+        if (mounted) setMqttPayload(payload);
+      } catch (err) {
+        console.log(message);
+      }
     });
 
     return () => {
@@ -51,13 +55,13 @@ export const Controller = () => {
       locationsFetch = [
         {
           name: "Phòng ngủ",
-          sensors: ["TempHumi1", "TempHumi2"],
-          speakers: ["Speaker1"],
+          sensor: { name: "TempHumi", lowerBound: 50, upperBound: 70 },
+          speaker: { name: "Speaker", auto: true },
         },
         {
           name: "Phòng khách",
-          sensors: ["TempHumi3", "TempHumi4"],
-          speakers: ["Speaker2", "Speaker3"],
+          sensor: { name: "TempHumi1", lowerBound: 30, upperBound: 60 },
+          speaker: { name: "Speaker1", auto: false },
         },
       ];
 
@@ -70,37 +74,12 @@ export const Controller = () => {
       <>
         {locations.map((location) => (
           <Panel header={location.name} key={location.name}>
-            {location.sensors &&
-              location.sensors.map((sensor) => (
-                <Subscriber
-                  key={sensor}
-                  sensor={sensor}
-                  mqttPayload={mqttPayload}
-                ></Subscriber>
-              ))}
-            <NewDevice
-              locationName={location.name}
-              locations={locations}
-              setLocations={setLocations}
-              title="sensor"
-            />
-
+            <Subscriber
+              sensor={location.sensor}
+              mqttPayload={mqttPayload}
+            ></Subscriber>
             <hr style={{ backgroundColor: "black" }}></hr>
-
-            {location.speakers &&
-              location.speakers.map((speaker) => (
-                <Publisher
-                  key={speaker}
-                  speaker={speaker}
-                  client={client}
-                ></Publisher>
-              ))}
-            <NewDevice
-              locationName={location.name}
-              locations={locations}
-              setLocations={setLocations}
-              title="speaker"
-            />
+            <Publisher speaker={location.speaker} client={client}></Publisher>
           </Panel>
         ))}
       </>
@@ -110,11 +89,7 @@ export const Controller = () => {
   return (
     <Tabs
       tabBarExtraContent={
-        <NewLocation
-          setLocations={setLocations}
-          locations={locations}
-          title="vị trí"
-        />
+        <NewLocation setLocations={setLocations} locations={locations} />
       }
     >
       <TabPane tab="Sensors & Speakers" key="1">
