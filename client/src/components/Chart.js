@@ -11,7 +11,7 @@ function checkinRange(timestamp, range) {
   } else if (range === "week") {
     return date.getTime() >= now.getTime() - 3600 * 24 * 7 * 1000;
   } else if (range === "month") {
-    console.log(date.getTime() >= now.getTime() - 3600 * 24 * 30 * 1000);
+    // console.log(date.getTime() >= now.getTime() - 3600 * 24 * 30 * 1000);
     return date.getTime() >= now.getTime() - 3600 * 24 * 30 * 1000;
   }
 }
@@ -26,7 +26,7 @@ export const Chart = (props) => {
     (async function () {
       const res = await iot.get("/api/devices/tempHumis");
       const data = res.data.data;
-      console.log(data);
+      // console.log(data);
       let filterData = data.filter((item) =>
         checkinRange(item.timestamp, props.range)
       );

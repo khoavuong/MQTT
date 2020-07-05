@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Col, Row, Container, Form, Input } from "reactstrap";
 import { Chart } from "../Chart";
 
@@ -6,7 +6,7 @@ const GeneralLog = (props) => {
   const [range, setRange] = useState("month");
 
   function handleSelectRange(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setRange(event.target.value);
   }
 

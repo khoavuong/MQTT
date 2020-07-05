@@ -3,7 +3,7 @@ import styles from "./Modal.module.css";
 import Aus from "../../hoc/Aus";
 import Backdrop from "../Backdrop/Backdrop";
 
-const modal = (props) => {
+const Modal = (props) => {
   return (
     <Aus>
       <Backdrop show={props.show} clicked={props.modalClosed} />
@@ -25,4 +25,4 @@ const areEqual = (prevProps, nextProps) => {
     prevProps.children === nextProps.children
   );
 };
-export default React.memo(modal, areEqual);
+export default React.memo(Modal, areEqual);

@@ -10,6 +10,7 @@ import NavBar from "../components/NavBar";
 import { Redirect } from "react-router";
 import GeneralLog from "../components/GeneralLog/GeneralLog";
 import { DeviceManage } from "../components/DeviceManage/DeviceManage";
+import DetailLog from "../components/DetailLog/DetailLog";
 
 const items = [
   {
@@ -32,6 +33,7 @@ const items = [
       {
         name: "detailedLogs",
         label: "Detailed Logs",
+        url: "/account/detail-log",
       },
     ],
   },
@@ -58,6 +60,7 @@ export const Account = (props) => {
         <div className={style.Page}>
           <Route path="/account/info" component={UserInfo} />
           <Route path="/account/general-log" component={GeneralLog} />
+          <Route path="/account/detail-log" component={DetailLog} />
           <Route path="/account/device" component={DeviceManage} />
         </div>
       </div>

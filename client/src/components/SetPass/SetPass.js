@@ -184,7 +184,7 @@ export default class FormPasswordReset extends Component {
                 </FormControl>
                 <Button
                   type="submit"
-                  variant="raised"
+                  variant="text"
                   color="primary"
                   disabled={Boolean(!isValid || isSubmitting)}
                   style={{ margin: "16px" }}
@@ -192,7 +192,7 @@ export default class FormPasswordReset extends Component {
                   {"Reset Password"}
                 </Button>
               </form>
-              {/* {this._renderModal()} */}
+              {this._renderModal()}
             </Paper>
           );
         }}
