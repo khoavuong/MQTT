@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Spin, Space, Row, Col, message, Slider } from "antd";
 import styled from "styled-components";
 import { FaThermometerHalf } from "react-icons/fa";
 import { WiHumidity } from "react-icons/wi";
+import useTempHumi from "./customHooks/useTempHumi";
 
 const FlexBetween = styled.div`
   display: flex;
@@ -10,33 +11,25 @@ const FlexBetween = styled.div`
   justify-content: space-between;
 `;
 
+let timeOut;
+
+const marks = {
+  0: {
+    style: {
+      color: "blue",
+    },
+    label: <strong>0°C</strong>,
+  },
+  100: {
+    style: {
+      color: "red",
+    },
+    label: <strong>100°C</strong>,
+  },
+};
+
 export const Subscriber = ({ mqttPayload, sensor }) => {
-  const [tempAndHumid, setTempAndHumid] = useState([]);
-  let timeOut;
-
-  const marks = {
-    0: {
-      style: {
-        color: "blue",
-      },
-      label: <strong>0°C</strong>,
-    },
-    100: {
-      style: {
-        color: "red",
-      },
-      label: <strong>100°C</strong>,
-    },
-  };
-
-  useEffect(() => {
-    mqttPayload.forEach((item) => {
-      if (item.device_id === sensor.name) {
-        setTempAndHumid(item.values);
-        return;
-      }
-    });
-  }, [mqttPayload, sensor]);
+  const tempAndHumid = useTempHumi(sensor.name, mqttPayload);
 
   const updateBoundHanlder = (bound) => {
     clearTimeout(timeOut);
@@ -56,15 +49,15 @@ export const Subscriber = ({ mqttPayload, sensor }) => {
         <Col span={14}>
           <FlexBetween>
             <Space>
-              <WiHumidity size={"2em"} style={{ color: "blue" }} />
-              <b style={{ color: tempAndHumid[1] >= 30 ? "red" : "" }}>
-                {tempAndHumid[1] || <Spin />}
-              </b>
-            </Space>
-            <Space>
               <FaThermometerHalf size={"2em"} style={{ color: "red" }} />
               <b style={{ color: tempAndHumid[0] >= 30 ? "red" : "" }}>
                 {tempAndHumid[0] || <Spin />}
+              </b>
+            </Space>
+            <Space>
+              <WiHumidity size={"2em"} style={{ color: "blue" }} />
+              <b style={{ color: tempAndHumid[1] >= 30 ? "red" : "" }}>
+                {tempAndHumid[1] || <Spin />}
               </b>
             </Space>
           </FlexBetween>

@@ -8,10 +8,21 @@ import { NewLocation } from "./NewLocation";
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
-// const Demo_URL = "mqtt://13.76.250.158:8083/mqtt";
+const Demo_URL = "tcp://52.187.125.59";
 const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
-const client = mqtt.connect(WebSocket_URL);
-const topics = ["Topic/TempHumi1"];
+const options = {
+  username: "BKvm",
+  password: "Hcmut_CSE_2020",
+};
+const client = mqtt.connect(WebSocket_URL, options);
+const topics = ["Topic/TempHumi"];
+client.on("connect", () => {
+  console.log(`===> Connected to MQTT server . <===`);
+});
+client.on("error", () => {
+  console.log("===> Cannot connect to MQQT server. <===");
+  process.exit(1);
+});
 
 export const Controller = () => {
   const [locations, setLocations] = useState([]);
@@ -56,7 +67,7 @@ export const Controller = () => {
         {
           name: "Phòng ngủ",
           sensor: { name: "TempHumi", lowerBound: 50, upperBound: 70 },
-          speaker: { name: "Speaker", auto: true },
+          speaker: { name: "Speaker", auto: false },
         },
         {
           name: "Phòng khách",
@@ -79,7 +90,12 @@ export const Controller = () => {
               mqttPayload={mqttPayload}
             ></Subscriber>
             <hr style={{ backgroundColor: "black" }}></hr>
-            <Publisher speaker={location.speaker} client={client}></Publisher>
+            <Publisher
+              speaker={location.speaker}
+              client={client}
+              mqttPayload={mqttPayload}
+              sensor={location.sensor}
+            ></Publisher>
           </Panel>
         ))}
       </>
