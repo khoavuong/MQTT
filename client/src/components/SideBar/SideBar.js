@@ -23,7 +23,7 @@ class SidebarItem extends Component {
       this.toggleCollapsed();
     }
     if (this.props.item.url) {
-      console.log(this.props.item.url);
+      // console.log(this.props.item.url);
       this.props.history.push(this.props.item.url);
     }
   };

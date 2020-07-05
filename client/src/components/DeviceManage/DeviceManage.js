@@ -1,25 +1,13 @@
 import React, { useState, useEffect } from "react";
-
-import { List } from "antd/lib/form/Form";
-import {
-  Button,
-  Tabs,
-  Skeleton,
-  Avatar,
-  Modal,
-  Row,
-  Col,
-  Card,
-  Layout,
-} from "antd";
-import { Input, Collapse } from "@material-ui/core";
+import { Button, Modal, Row, Col, Card, Layout } from "antd";
+import { Input } from "@material-ui/core";
 import iot from "../../api/iot";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 export const DeviceManage = () => {
   const [device, setDevices] = useState([]);
-  const [mqttPayload, setMqttPayload] = useState([]);
+  // const [mqttPayload, setMqttPayload] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newName, setNewName] = useState("");
@@ -62,7 +50,7 @@ export const DeviceManage = () => {
     const delay = (m) => new Promise((r) => setTimeout(r, m)); // Mimic api call
 
     (async () => {
-      let deviceFetch;
+      // let deviceFetch;
       await delay(1500);
       setLoading(false);
 
@@ -108,8 +96,8 @@ export const DeviceManage = () => {
       j = 0;
     while (i < device.length) {
       if (
-        device[i].name == focusDevice.name ||
-        device[i].room == focusDevice.room
+        device[i].name === focusDevice.name ||
+        device[i].room === focusDevice.room
       )
         j = i;
       i++;
@@ -128,29 +116,29 @@ export const DeviceManage = () => {
       });
   };
 
-  const renderDevice = () => {
-    return (
-      <>
-        {device.map((item) => (
-          <Tabs header={"Room: " + item.room} key={item.room}>
-            Name: {item.name}
-            <hr style={{ backgroundColor: "black" }}></hr>
-            <Button
-              key="rename"
-              type="dashed"
-              onClick={() => setShowModal(true)}
-            >
-              Rename
-            </Button>
-            ,
-            <Button key="delete" type="dashed" onClick={handleDelete}>
-              Delete
-            </Button>
-          </Tabs>
-        ))}
-      </>
-    );
-  };
+  // const renderDevice = () => {
+  //   return (
+  //     <>
+  //       {device.map((item) => (
+  //         <Tabs header={"Room: " + item.room} key={item.room}>
+  //           Name: {item.name}
+  //           <hr style={{ backgroundColor: "black" }}></hr>
+  //           <Button
+  //             key="rename"
+  //             type="dashed"
+  //             onClick={() => setShowModal(true)}
+  //           >
+  //             Rename
+  //           </Button>
+  //           ,
+  //           <Button key="delete" type="dashed" onClick={handleDelete}>
+  //             Delete
+  //           </Button>
+  //         </Tabs>
+  //       ))}
+  //     </>
+  //   );
+  // };
 
   return (
     <div>
@@ -167,7 +155,7 @@ export const DeviceManage = () => {
           }}
         >
           {device.map((item) => (
-            <div style={{ paddingTop: "1%" }}>
+            <div style={{ paddingTop: "1%" }} key={item.name}>
               <Card style={{ width: "600px" }}>
                 <Row>
                   <Col span={16}>{item.room + ">" + item.name}</Col>

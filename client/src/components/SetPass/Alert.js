@@ -1,15 +1,15 @@
-import React from 'react'
-import Slide from '@material-ui/core/Slide'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
+import React from "react";
+import Slide from "@material-ui/core/Slide";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />
-}
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" {...props} />;
+});
 
 export default function Alert({
   handleClose,
@@ -23,7 +23,7 @@ export default function Alert({
   return (
     <Dialog
       open={isOpen}
-      transition={Transition}
+      TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
       aria-labelledby="alert-dialog-slide-title"
@@ -36,7 +36,7 @@ export default function Alert({
       <DialogActions>
         {hasTwoButtons ? (
           <Button onClick={handleClose} variant="raised" color="primary">
-            {'CANCEL'}
+            {"CANCEL"}
           </Button>
         ) : null}
         <Button onClick={handleSubmit} color="primary">
@@ -44,5 +44,5 @@ export default function Alert({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }

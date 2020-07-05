@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
 import SetPass from "../SetPass/SetPass";
-import AddUser from "../AddUser/AddUser";
+
 import iot from "../../api/iot";
 
 const useStyles = makeStyles((theme) => ({
@@ -56,14 +56,14 @@ const UserInfo = (props) => {
 
   useEffect(() => {
     (async function getData() {
-      console.log(localStorage.getItem("accessToken"));
+      // console.log(localStorage.getItem("accessToken"));
       try {
         const result = await iot.get("/api/users", {
           headers: {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
-        console.log(result);
+        // console.log(result);
         // if (info.username === "")
         setInfo({
           username: result.data.data.user.email,
