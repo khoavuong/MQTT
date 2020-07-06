@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, Input } from "antd";
+import iot from "../api/iot.js";
 
 export const NewLocation = ({ locations, setLocations }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -12,6 +13,42 @@ export const NewLocation = ({ locations, setLocations }) => {
     setSpeakerID("");
     setSensorID("");
   };
+
+  const onOkClick = () => {
+    iot
+      .post(
+        `api/users/rooms`,
+        {
+          name: roomName,
+          inputDevice: sensorID,
+          outputDevice: speakerID,
+        },
+        { headers: { Authorization: localStorage.getItem("accessToken") } }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .then(() => {
+        const newLocation = {
+          name: roomName,
+          sensor: { name: sensorID, lowerBound: 30, upperBound: 70 },
+          speaker: { name: speakerID, auto: false },
+        };
+        setLocations([...locations, newLocation]);
+        resetInput();
+        setModalVisible(false);
+      });
+
+    /* const newLocation = {
+      name: roomName,
+      sensor: { name: sensorID, lowerBound: 30, upperBound: 70 },
+      speaker: { name: speakerID, auto: false },
+    };
+    setLocations([...locations, newLocation]);
+    resetInput();
+    setModalVisible(false); */
+  };
+
   return (
     <div>
       <Button
@@ -26,16 +63,7 @@ export const NewLocation = ({ locations, setLocations }) => {
       <Modal
         title={`Tạo vị trí mới`}
         visible={modalVisible}
-        onOk={() => {
-          const newLocation = {
-            name: roomName,
-            sensor: { name: sensorID, lowerBound: 30, upperBound: 70 },
-            speaker: { name: speakerID, auto: false },
-          };
-          setLocations([...locations, newLocation]);
-          resetInput();
-          setModalVisible(false);
-        }}
+        onOk={onOkClick}
         onCancel={() => {
           resetInput();
           setModalVisible(false);

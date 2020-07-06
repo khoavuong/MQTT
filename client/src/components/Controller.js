@@ -4,24 +4,23 @@ import mqtt from "mqtt";
 import { Publisher } from "./Publisher";
 import { Subscriber } from "./Subscriber";
 import { NewLocation } from "./NewLocation";
+import iot from "../api/iot.js";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
-const Demo_URL = "tcp://52.187.125.59";
 const WebSocket_URL = "mqtt://13.67.92.217:8083/mqtt";
-const options = {
-  username: "BKvm",
-  password: "Hcmut_CSE_2020",
-};
-const client = mqtt.connect(WebSocket_URL, options);
+// const demo_URL = "52.187.125.59";
+const client = mqtt.connect(WebSocket_URL);
+
 const topics = ["Topic/TempHumi"];
-client.on("connect", () => {
+
+client.on("connect", (foo) => {
   console.log(`===> Connected to MQTT server . <===`);
 });
-client.on("error", () => {
+client.on("error", (err) => {
   console.log("===> Cannot connect to MQQT server. <===");
-  process.exit(1);
+  console.log(err);
 });
 
 export const Controller = () => {
@@ -35,14 +34,15 @@ export const Controller = () => {
 
     client.subscribe(topics);
     client.on("message", function (topic, message) {
-      message = message.toString().replace(/ /g, ""); // Remove all white spaces
+      /* message = message.toString().replace(/ /g, ""); // Remove all white spaces
       const JSONmessage = message // Turn the string in to JSON format
         .replace(/device_id/g, '"device_id"')
         .replace(/values/g, '"values"')
-        .replace(/:([^[]*?),/g, ':"$1",');
+        .replace(/:([^[]*?),/g, ':"$1",'); */
 
       try {
-        const payload = JSON.parse(JSONmessage);
+        // const payload = JSON.parse(JSONmessage);
+        const payload = JSON.parse(message.toString());
         if (mounted) setMqttPayload(payload);
       } catch (err) {
         console.log(message);
@@ -57,13 +57,28 @@ export const Controller = () => {
 
   // Fetch Data
   useEffect(() => {
-    const delay = (m) => new Promise((r) => setTimeout(r, m)); // Mimic api call
-
     (async () => {
-      let locationsFetch;
-      await delay(1500);
+      const realData = await iot.get("/api/users/rooms", {
+        headers: { Authorization: localStorage.getItem("accessToken") },
+      });
+
       setLoading(false);
-      locationsFetch = [
+
+      const locationsFetch = realData.data.data.rooms.map((location) => {
+        return {
+          name: location.name,
+          sensor: {
+            name: location.devices.input.deviceId,
+            lowerBound: 50,
+            upperBound: 70,
+          },
+          speaker: { name: location.devices.output.deviceId, auto: false },
+        };
+      });
+
+      /*
+        let locationsFetch
+       locationsFetch = [
         {
           name: "Phòng ngủ",
           sensor: { name: "TempHumi", lowerBound: 50, upperBound: 70 },
@@ -74,7 +89,7 @@ export const Controller = () => {
           sensor: { name: "TempHumi1", lowerBound: 30, upperBound: 60 },
           speaker: { name: "Speaker1", auto: false },
         },
-      ];
+      ]; */
 
       setLocations(locationsFetch);
     })();
