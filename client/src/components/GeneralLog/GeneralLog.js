@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Chart } from "../Chart";
 import { Collapse, Layout } from "antd";
 import iot from "../../api/iot";
+import Spinner from "../Spinner/Spinner";
 
 const { Header, Content } = Layout;
 const { Panel } = Collapse;
 
 const GeneralLog = (props) => {
   const [rooms, setRooms] = useState([]);
+  const [isloading, setIsLoading] = useState(true);
   useEffect(() => {
     async function getData() {
       try {
@@ -18,6 +20,7 @@ const GeneralLog = (props) => {
         });
         console.log(res);
         setRooms(res.data.data.rooms);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -38,6 +41,7 @@ const GeneralLog = (props) => {
     });
     return lstLogs;
   }
+  if (isloading) return <Spinner />;
   return (
     <Layout>
       <Header style={{ backgroundColor: "white", paddingTop: "10px" }}>
