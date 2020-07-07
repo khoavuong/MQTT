@@ -72,7 +72,7 @@ export const Chart = (props) => {
             <Input
               type="select"
               onChange={handleSelectRange}
-              defaultValue="month"
+              defaultValue={range}
             >
               <option value="today">Today</option>
               <option value="week">A week ago</option>
