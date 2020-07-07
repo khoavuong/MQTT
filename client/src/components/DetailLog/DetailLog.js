@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Collapse, Table, Layout } from "antd";
+import { Collapse, Table, Layout, Spin } from "antd";
 import iot from "../../api/iot";
+import Spinner from "../Spinner/Spinner";
 // import { Col, Row, Container } from "reactstrap";
 
 const { Panel } = Collapse;
@@ -54,6 +55,7 @@ const columns = [
 
 const DetailLog = (props) => {
   const [rooms, setRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function getData() {
       try {
@@ -64,6 +66,7 @@ const DetailLog = (props) => {
         });
         console.log(res);
         setRooms(res.data.data.rooms);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -90,6 +93,7 @@ const DetailLog = (props) => {
     return lstLogs;
   }
 
+  if (isLoading) return <Spinner />;
   return (
     <Layout>
       <Header style={{ backgroundColor: "white", paddingTop: "10px" }}>

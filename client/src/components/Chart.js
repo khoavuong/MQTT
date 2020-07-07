@@ -25,6 +25,7 @@ export const Chart = (props) => {
   const [range, setRange] = useState("month");
 
   function handleSelectRange(event) {
+    setIsLoading(true);
     setRange(event.target.value);
   }
 
