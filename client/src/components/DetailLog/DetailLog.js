@@ -77,6 +77,7 @@ const DetailLog = (props) => {
   function renderLogs() {
     if (rooms.length <= 0) return null;
     var lstLogs = rooms.map((room) => {
+      room.devices.output.logs.reverse();
       return (
         <Panel
           header={room.name + " - " + room.devices.output.deviceId}
