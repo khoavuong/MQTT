@@ -30,6 +30,7 @@ const columns = [
     title: "State",
     dataIndex: "state",
     key: "state",
+    render: (val) => (val ? "ON" : "OFF"),
   },
   {
     title: "Mode",
@@ -45,6 +46,7 @@ const columns = [
     title: "Timestamp",
     dataIndex: "timestamp",
     key: "timestamp",
+    render: (val) => new Date(val).toGMTString().slice(0, -4),
   },
   {
     title: "Action",
