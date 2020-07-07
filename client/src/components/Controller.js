@@ -61,7 +61,7 @@ export const Controller = () => {
       const realData = await iot.get("/api/users/rooms", {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-
+      console.log(realData);
       setLoading(false);
 
       const locationsFetch = realData.data.data.rooms.map((location) => {
