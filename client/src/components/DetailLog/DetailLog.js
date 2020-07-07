@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Collapse, Table, Layout } from "antd";
+import iot from "../../api/iot";
 // import { Col, Row, Container } from "reactstrap";
 
 const { Panel } = Collapse;
@@ -20,19 +21,19 @@ const devices = [
 
 const columns = [
   {
-    title: "Device name",
-    dataIndex: "deviceName",
-    key: "deviceName",
+    title: "Device id",
+    dataIndex: "deviceId",
+    key: "deviceId",
   },
   {
-    title: "Type request",
-    dataIndex: "typeRequest",
-    key: "typeRequest",
+    title: "State",
+    dataIndex: "state",
+    key: "state",
   },
   {
-    title: "User",
-    dataIndex: "user",
-    key: "user",
+    title: "Mode",
+    dataIndex: "mode",
+    key: "mode",
   },
   {
     title: "Value",
@@ -44,61 +45,58 @@ const columns = [
     dataIndex: "timestamp",
     key: "timestamp",
   },
-];
-
-const data = [
   {
-    key: "1",
-    deviceName: "speaker1",
-    typeRequest: "publish",
-    user: "khoa",
-    value: "1000",
-    timestamp: "2020-06-18T04:51:38.408Z",
-  },
-  {
-    key: "2",
-    deviceName: "speaker1",
-    typeRequest: "publish",
-    user: "khoa",
-    value: "1000",
-    timestamp: "2020-06-18T04:51:43.411Z",
-  },
-  {
-    key: "3",
-    deviceName: "speaker1",
-    typeRequest: "publish",
-    user: "khoa",
-    value: "1000",
-    timestamp: "2020-06-18T04:51:48.419Z",
-  },
-  {
-    key: "4",
-    deviceName: "speaker1",
-    typeRequest: "publish",
-    user: "khoa",
-    value: "1000",
-    timestamp: "2020-06-18T04:51:53.417Z",
+    title: "Action",
+    dataIndex: "action",
+    key: "action",
   },
 ];
 
 const DetailLog = (props) => {
+  const [rooms, setRooms] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await iot.get("/api/users/rooms", {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        console.log(res);
+        setRooms(res.data.data.rooms);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
+
+  function renderLogs() {
+    if (rooms.length <= 0) return null;
+    var lstLogs = rooms.map((room) => {
+      return (
+        <Panel
+          header={room.name + " - " + room.devices.output.deviceId}
+          key={room.devices.output.deviceId}
+        >
+          <Table
+            columns={columns}
+            dataSource={room.devices.output.logs}
+            key={room.devices.output.deviceId}
+          />
+        </Panel>
+      );
+    });
+    return lstLogs;
+  }
+
   return (
     <Layout>
       <Header style={{ backgroundColor: "white", paddingTop: "10px" }}>
         <h3>Detail logs of each speaker</h3>
       </Header>
       <Content>
-        <Collapse defaultActiveKey={[devices[0].id]}>
-          {devices.map((device) => {
-            return (
-              // <Row key={device.name}>
-              <Panel header={device.room + " - " + device.name} key={device.id}>
-                <Table columns={columns} dataSource={data} />
-              </Panel>
-              // </Row>
-            );
-          })}
-        </Collapse>
+        <Collapse defaultActiveKey={[devices[0].id]}>{renderLogs()}</Collapse>
       </Content>
     </Layout>
   );

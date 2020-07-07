@@ -1,34 +1,52 @@
-import React, { useState } from "react";
-import { Col, Row, Container, Form, Input } from "reactstrap";
+import React, { useState, useEffect } from "react";
 import { Chart } from "../Chart";
+import { Collapse, Layout } from "antd";
+import iot from "../../api/iot";
+
+const { Header, Content } = Layout;
+const { Panel } = Collapse;
 
 const GeneralLog = (props) => {
-  const [range, setRange] = useState("month");
-
-  function handleSelectRange(event) {
-    // console.log(event.target.value);
-    setRange(event.target.value);
+  const [rooms, setRooms] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await iot.get("/api/users/rooms", {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        });
+        console.log(res);
+        setRooms(res.data.data.rooms);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
+  function renderCharts() {
+    if (rooms.length <= 0) return null;
+    var lstLogs = rooms.map((room) => {
+      return (
+        <Panel
+          header={room.name + " - " + room.devices.input.deviceId}
+          key={room.devices.input.deviceId}
+        >
+          <Chart deviceId={room.devices.input.deviceId} />
+        </Panel>
+      );
+    });
+    return lstLogs;
   }
-
   return (
-    <Container>
-      <Row>
-        <Col sm="12" md={{ size: 6, offset: 3 }}>
-          <Form>
-            <Input
-              type="select"
-              onChange={handleSelectRange}
-              defaultValue="month"
-            >
-              <option value="today">Today</option>
-              <option value="week">A week ago</option>
-              <option value="month">A month ago</option>
-            </Input>
-          </Form>
-        </Col>
-      </Row>
-      <Chart range={range} />
-    </Container>
+    <Layout>
+      <Header style={{ backgroundColor: "white", paddingTop: "10px" }}>
+        <h3>Chart for temperature and humidity</h3>
+      </Header>
+      <Content>
+        <Collapse>{renderCharts()}</Collapse>
+      </Content>
+    </Layout>
   );
 };
 
