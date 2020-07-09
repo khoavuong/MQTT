@@ -49,6 +49,10 @@ export const SignIn = () => {
     history.push("/signup");
   };
 
+  const toForgotPassword = () => {
+    history.push("/forgot-password");
+  };
+
   const formSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -61,6 +65,7 @@ export const SignIn = () => {
       .then((res) => {
         localStorage.setItem("accessToken", res.data.data.accessToken);
         localStorage.setItem("username", res.data.data.user.name);
+        localStorage.setItem("email", res.data.data.user.email);
         setLoading(null);
         history.push("/");
       })
@@ -115,6 +120,10 @@ export const SignIn = () => {
 
             <Button type="submit" color="primary" block>
               Sign In
+            </Button>
+
+            <Button color="link" onClick={toForgotPassword}>
+              Forgot password?
             </Button>
 
             <Button color="danger" block onClick={toSignUp}>
