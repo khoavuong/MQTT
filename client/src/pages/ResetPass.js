@@ -29,6 +29,7 @@ export const ResetPass = (props) => {
   const [resText, setResText] = useState("");
   const [isMatch, setIsMatch] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const history = useHistory();
 
   async function formSubmit(event) {
@@ -49,11 +50,13 @@ export const ResetPass = (props) => {
         console.log(res);
         setLoading(false);
         setResText(res.data.message);
+        setIsSuccess(true);
         setIsShowAlert(true);
       } catch (error) {
         console.log(error.response);
         setLoading(false);
         setResText(error.response.data.message);
+        setIsSuccess(false);
         setIsShowAlert(true);
       }
   }
@@ -108,7 +111,7 @@ export const ResetPass = (props) => {
           history.push("/signin");
         }}
         text={resText}
-        title="Success"
+        title={isSuccess ? "Success" : "Fail"}
         submitButtonText="Done"
       />
     </FormWrapper>
