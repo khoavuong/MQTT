@@ -9,7 +9,7 @@ import userimage from "../../assets/user.png";
 import Button from "@material-ui/core/Button";
 import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
-import SetPass from "../SetPass/SetPass";
+import FormPasswordChange from "../FormPasswordChange/FormPasswordChange";
 
 import iot from "../../api/iot";
 
@@ -84,20 +84,10 @@ const UserInfo = (props) => {
     setChangePasswd(true);
   }
 
-  // function addUserHandler() {
-  //   setIsAddUser(true);
-  // }
-
-  // if (changePasswd) {
-  //   modalChild = <SetPass modalClosed={cancelModalHandler} />;
-  // } else if (isAddUser) {
-  //   modalChild = <AddUser modalClosed={cancelModalHandler} />;
-  // }
-
   return (
     <Aus>
       <Modal show={changePasswd} modalClosed={() => cancelModalHandler(1)}>
-        <SetPass modalClosed={() => cancelModalHandler(1)} />
+        <FormPasswordChange modalClosed={() => cancelModalHandler(1)} />
       </Modal>
 
       <Card className={classes.root}>

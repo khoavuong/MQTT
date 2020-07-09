@@ -7,13 +7,14 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-
+import iot from "../../api/iot";
 import Spinner from "../Spinner/Spinner";
 import Alert from "./Alert";
 
-export default class FormPasswordReset extends Component {
+export default class FormPasswordChange extends Component {
   state = {
     passChangeSuccess: false,
+    textRes: "",
   };
 
   _handleModalClose = () => {
@@ -35,29 +36,49 @@ export default class FormPasswordReset extends Component {
         onClose={this._handleModalClose}
         handleSubmit={onClick}
         title="Password Reset"
-        text="Your password was changed successfully"
+        text={this.state.textRes}
         submitButtonText="Done"
       />
     );
   };
 
-  _handleSubmit = ({
+  _handleSubmit = async ({
     currentPass,
     newPass,
     confirmPass,
     setSubmitting,
     resetForm,
   }) => {
-    // fake
-    setTimeout(async () => {
-      setSubmitting(false);
-
+    try {
+      console.log(currentPass);
+      console.log(newPass);
+      const res = await iot.put(
+        "/api/users/change-password",
+        {
+          oldPassword: currentPass,
+          newPassword: newPass,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res);
       this.setState(() => ({
         passChangeSuccess: true,
+        textRes: res.data.message,
       }));
-
       resetForm();
-    }, 1000);
+    } catch (error) {
+      console.log(error.response);
+      this.setState(() => ({
+        passChangeSuccess: true,
+        textRes: error.response.data.message,
+      }));
+      resetForm();
+    }
   };
 
   render() {
