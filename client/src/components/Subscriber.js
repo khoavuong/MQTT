@@ -28,12 +28,13 @@ const marks = {
   },
 };
 
-export const Subscriber = ({ mqttPayload, sensor }) => {
+export const Subscriber = ({ mqttPayload, sensor, setBound }) => {
   const tempAndHumid = useTempHumi(sensor.name, mqttPayload);
 
-  const updateBoundHanlder = (bound) => {
+  const updateBoundHandler = (bound) => {
     clearTimeout(timeOut);
     timeOut = setTimeout(() => {
+      setBound(sensor.name, bound[0], bound[1]);
       message.success(
         `Update stable range of ${sensor.name} to [${bound}] successfully`
       );
@@ -50,15 +51,11 @@ export const Subscriber = ({ mqttPayload, sensor }) => {
           <FlexBetween>
             <Space>
               <FaThermometerHalf size={"2em"} style={{ color: "red" }} />
-              <b style={{ color: tempAndHumid[0] >= 30 ? "red" : "" }}>
-                {tempAndHumid[0] || <Spin />}
-              </b>
+              <b>{tempAndHumid[0] || <Spin />}</b>
             </Space>
             <Space>
               <WiHumidity size={"2em"} style={{ color: "blue" }} />
-              <b style={{ color: tempAndHumid[1] >= 30 ? "red" : "" }}>
-                {tempAndHumid[1] || <Spin />}
-              </b>
+              <b>{tempAndHumid[1] || <Spin />}</b>
             </Space>
           </FlexBetween>
         </Col>
@@ -72,7 +69,7 @@ export const Subscriber = ({ mqttPayload, sensor }) => {
             range
             marks={marks}
             defaultValue={[sensor.lowerBound, sensor.upperBound]}
-            onChange={(value) => updateBoundHanlder(value)}
+            onChange={(value) => updateBoundHandler(value)}
           />
         </Col>
       </Row>

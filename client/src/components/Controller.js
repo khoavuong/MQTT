@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Collapse, Spin } from "antd";
+import { Tabs, Collapse, Spin, Alert } from "antd";
 import mqtt from "mqtt";
 import { Publisher } from "./Publisher";
 import { Subscriber } from "./Subscriber";
@@ -34,14 +34,7 @@ export const Controller = () => {
 
     client.subscribe(topics);
     client.on("message", function (topic, message) {
-      /* message = message.toString().replace(/ /g, ""); // Remove all white spaces
-      const JSONmessage = message // Turn the string in to JSON format
-        .replace(/device_id/g, '"device_id"')
-        .replace(/values/g, '"values"')
-        .replace(/:([^[]*?),/g, ':"$1",'); */
-
       try {
-        // const payload = JSON.parse(JSONmessage);
         const payload = JSON.parse(message.toString());
         if (mounted) setMqttPayload(payload);
       } catch (err) {
@@ -61,7 +54,6 @@ export const Controller = () => {
       const realData = await iot.get("/api/users/rooms", {
         headers: { Authorization: localStorage.getItem("accessToken") },
       });
-      console.log(realData);
       setLoading(false);
 
       const locationsFetch = realData.data.data.rooms.map((location) => {
@@ -76,24 +68,22 @@ export const Controller = () => {
         };
       });
 
-      /*
-        let locationsFetch
-       locationsFetch = [
-        {
-          name: "Phòng ngủ",
-          sensor: { name: "TempHumi", lowerBound: 50, upperBound: 70 },
-          speaker: { name: "Speaker", auto: false },
-        },
-        {
-          name: "Phòng khách",
-          sensor: { name: "TempHumi1", lowerBound: 30, upperBound: 60 },
-          speaker: { name: "Speaker1", auto: false },
-        },
-      ]; */
-
       setLocations(locationsFetch);
     })();
   }, []);
+
+  const setBound = (name, lowerBound, upperBound) => {
+    const newLocations = locations.map((location) => {
+      if (location.sensor.name === name)
+        return {
+          name: location.name,
+          speaker: location.speaker,
+          sensor: { name: location.sensor.name, lowerBound, upperBound },
+        };
+      else return location;
+    });
+    setLocations(newLocations);
+  };
 
   const renderlocations = () => {
     return (
@@ -103,6 +93,7 @@ export const Controller = () => {
             <Subscriber
               sensor={location.sensor}
               mqttPayload={mqttPayload}
+              setBound={setBound}
             ></Subscriber>
             <hr style={{ backgroundColor: "black" }}></hr>
             <Publisher
@@ -117,21 +108,51 @@ export const Controller = () => {
     );
   };
 
-  return (
-    <Tabs
-      tabBarExtraContent={
-        <NewLocation setLocations={setLocations} locations={locations} />
+  const renderAlert = () => {
+    console.log(locations, mqttPayload);
+    return mqttPayload.map((device) => {
+      for (const location of locations) {
+        if (
+          location.sensor.name === device.device_id &&
+          (device.values[0] < location.sensor.lowerBound ||
+            device.values[0] > location.sensor.upperBound)
+        ) {
+          return (
+            <>
+              <Alert
+                key={device.device_id}
+                message={`${device.device_id} is receiving temperature value of ${device.values[0]}, which is not in the [${location.sensor.lowerBound},${location.sensor.upperBound}] device's safe zone`}
+                type="error"
+                closable
+              />
+              <br />
+            </>
+          );
+        }
       }
-    >
-      <TabPane tab="Sensors & Speakers" key="1">
-        {loading ? (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Spin />
-          </div>
-        ) : (
-          <Collapse>{renderlocations()}</Collapse>
-        )}
-      </TabPane>
-    </Tabs>
+      return null;
+    });
+  };
+
+  return (
+    <>
+      {renderAlert()}
+      <br />
+      <Tabs
+        tabBarExtraContent={
+          <NewLocation setLocations={setLocations} locations={locations} />
+        }
+      >
+        <TabPane tab="Sensors & Speakers" key="1">
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Spin />
+            </div>
+          ) : (
+            <Collapse>{renderlocations()}</Collapse>
+          )}
+        </TabPane>
+      </Tabs>
+    </>
   );
 };
