@@ -7,18 +7,18 @@ import Spinner from "../Spinner/Spinner";
 const { Panel } = Collapse;
 const { Header, Content } = Layout;
 
-const devices = [
-  {
-    id: "klasoifwo",
-    name: "speaker1",
-    room: "Phong Khach",
-  },
-  {
-    id: "jiawijfjjiojf",
-    name: "speaker2",
-    room: "Phong Ngu",
-  },
-];
+// const devices = [
+//   {
+//     id: "klasoifwo",
+//     name: "speaker1",
+//     room: "Phong Khach",
+//   },
+//   {
+//     id: "jiawijfjjiojf",
+//     name: "speaker2",
+//     room: "Phong Ngu",
+//   },
+// ];
 
 const columns = [
   {
@@ -32,11 +32,11 @@ const columns = [
     key: "state",
     render: (val) => (val ? "ON" : "OFF"),
   },
-  {
-    title: "Mode",
-    dataIndex: "mode",
-    key: "mode",
-  },
+  // {
+  //   title: "Mode",
+  //   dataIndex: "mode",
+  //   key: "mode",
+  // },
   {
     title: "Value",
     dataIndex: "value",
@@ -48,11 +48,11 @@ const columns = [
     key: "timestamp",
     render: (val) => new Date(val).toGMTString().slice(0, -4),
   },
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-  },
+  // {
+  //   title: "Action",
+  //   dataIndex: "action",
+  //   key: "action",
+  // },
 ];
 
 const DetailLog = (props) => {
@@ -66,7 +66,7 @@ const DetailLog = (props) => {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
-        console.log(res);
+        // console.log(res);
         setRooms(res.data.data.rooms);
         setIsLoading(false);
       } catch (error) {
@@ -103,7 +103,9 @@ const DetailLog = (props) => {
         <h3>Detail logs of each speaker</h3>
       </Header>
       <Content>
-        <Collapse defaultActiveKey={[devices[0].id]}>{renderLogs()}</Collapse>
+        <Collapse defaultActiveKey={rooms[0].devices.output.deviceId}>
+          {renderLogs()}
+        </Collapse>
       </Content>
     </Layout>
   );

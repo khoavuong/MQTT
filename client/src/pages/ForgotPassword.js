@@ -32,8 +32,8 @@ export const ForgotPassword = (props) => {
   async function formSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    console.log(data.get("email"));
-    console.log(history);
+    // console.log(data.get("email"));
+    // console.log(history);
     try {
       setLoading(true);
       const res = await iot.post("/api/auth/reset-password", {

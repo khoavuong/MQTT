@@ -40,7 +40,7 @@ export const Chart = (props) => {
             },
           }
         );
-        console.log(res);
+        // console.log(res);
         const data = res.data.data.logs;
         // console.log(data);
         let filterData = data.filter((item) =>

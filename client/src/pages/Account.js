@@ -2,7 +2,7 @@ import React from "react";
 import SideBar from "../components/SideBar/SideBar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
-import ToysIcon from "@material-ui/icons/Toys";
+// import ToysIcon from "@material-ui/icons/Toys";
 import { Route } from "react-router-dom";
 import UserInfo from "../components/UserInfo/UserInfo";
 import style from "./Account.module.css";
@@ -27,23 +27,23 @@ const items = [
     items: [
       {
         name: "generalLogs",
-        label: "General Logs",
-        url: "/account/general-log",
+        label: "Temperature charts",
+        url: "/account/charts",
       },
       {
         name: "detailedLogs",
-        label: "Detailed Logs",
-        url: "/account/detail-log",
+        label: "Speaker logs",
+        url: "/account/logs",
       },
     ],
   },
   "divider",
-  {
-    name: "manageDevices",
-    label: "Manage Devices",
-    url: "/account/device",
-    Icon: ToysIcon,
-  },
+  // {
+  //   name: "manageDevices",
+  //   label: "Manage Devices",
+  //   url: "/account/device",
+  //   Icon: ToysIcon,
+  // },
 ];
 
 export const Account = (props) => {
@@ -59,8 +59,8 @@ export const Account = (props) => {
         </div>
         <div className={style.Page}>
           <Route path="/account/info" component={UserInfo} />
-          <Route path="/account/general-log" component={GeneralLog} />
-          <Route path="/account/detail-log" component={DetailLog} />
+          <Route path="/account/charts" component={GeneralLog} />
+          <Route path="/account/logs" component={DetailLog} />
           <Route path="/account/device" component={DeviceManage} />
         </div>
       </div>

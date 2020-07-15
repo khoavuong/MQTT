@@ -50,8 +50,6 @@ export default class FormPasswordChange extends Component {
     resetForm,
   }) => {
     try {
-      console.log(currentPass);
-      console.log(newPass);
       const res = await iot.put(
         "/api/users/change-password",
         {
@@ -65,14 +63,14 @@ export default class FormPasswordChange extends Component {
           },
         }
       );
-      console.log(res);
+      // console.log(res);
       this.setState(() => ({
         passChangeSuccess: true,
         textRes: res.data.message,
       }));
       resetForm();
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       this.setState(() => ({
         passChangeSuccess: true,
         textRes: error.response.data.message,

@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import Aus from "../../hoc/Aus";
 import Modal from "../Modal/Modal";
 import FormPasswordChange from "../FormPasswordChange/FormPasswordChange";
-
+import Spinner from "../Spinner/Spinner";
 import iot from "../../api/iot";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const UserInfo = (props) => {
   const classes = useStyles();
   const [changePasswd, setChangePasswd] = useState(false);
-  // const [isAddUser, setIsAddUser] = useState(false);
+  const [isloading, setLoading] = useState(true);
   const [info, setInfo] = useState({
     username: "",
     fullname: "",
@@ -69,6 +69,7 @@ const UserInfo = (props) => {
           username: result.data.data.user.email,
           fullname: result.data.data.user.name,
         });
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -83,7 +84,7 @@ const UserInfo = (props) => {
   function changePasswdHandler() {
     setChangePasswd(true);
   }
-
+  if (isloading) return <Spinner />;
   return (
     <Aus>
       <Modal show={changePasswd} modalClosed={() => cancelModalHandler(1)}>
