@@ -18,7 +18,7 @@ const GeneralLog = (props) => {
             Authorization: localStorage.getItem("accessToken"),
           },
         });
-        console.log(res);
+        // console.log(res);
         setRooms(res.data.data.rooms);
         setIsLoading(false);
       } catch (error) {
@@ -48,7 +48,9 @@ const GeneralLog = (props) => {
         <h3>Chart for temperature and humidity</h3>
       </Header>
       <Content>
-        <Collapse>{renderCharts()}</Collapse>
+        <Collapse defaultActiveKey={rooms[0].devices.input.deviceId}>
+          {renderCharts()}
+        </Collapse>
       </Content>
     </Layout>
   );

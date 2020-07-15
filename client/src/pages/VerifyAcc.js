@@ -13,7 +13,7 @@ export const VerifyAcc = (props) => {
           `/api/auth/verify/${props.match.params.verifyToken}`,
           {}
         );
-        console.log(res);
+        // console.log(res);
         if (res.data.success) {
           setLoading(false);
           setIsSuccess(true);

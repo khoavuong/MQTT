@@ -47,13 +47,13 @@ export const ResetPass = (props) => {
             password: data.get("password"),
           }
         );
-        console.log(res);
+        // console.log(res);
         setLoading(false);
         setResText(res.data.message);
         setIsSuccess(true);
         setIsShowAlert(true);
       } catch (error) {
-        console.log(error.response);
+        // console.log(error.response);
         setLoading(false);
         setResText(error.response.data.message);
         setIsSuccess(false);
