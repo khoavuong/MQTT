@@ -48,7 +48,11 @@ const GeneralLog = (props) => {
         <h3>Chart for temperature and humidity</h3>
       </Header>
       <Content>
-        <Collapse defaultActiveKey={rooms[0].devices.input.deviceId}>
+        <Collapse
+          defaultActiveKey={
+            rooms.length > 0 ? rooms[0].devices.input.deviceId : null
+          }
+        >
           {renderCharts()}
         </Collapse>
       </Content>

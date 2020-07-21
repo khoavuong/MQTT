@@ -26,12 +26,12 @@ const columns = [
     dataIndex: "deviceId",
     key: "deviceId",
   },
-  {
-    title: "State",
-    dataIndex: "state",
-    key: "state",
-    render: (val) => (val ? "ON" : "OFF"),
-  },
+  // {
+  //   title: "State",
+  //   dataIndex: "state",
+  //   key: "state",
+  //   render: (val) => (val ? "ON" : "OFF"),
+  // },
   // {
   //   title: "Mode",
   //   dataIndex: "mode",
@@ -103,7 +103,11 @@ const DetailLog = (props) => {
         <h3>Detail logs of each speaker</h3>
       </Header>
       <Content>
-        <Collapse defaultActiveKey={rooms[0].devices.output.deviceId}>
+        <Collapse
+          defaultActiveKey={
+            rooms.length > 0 ? rooms[0].devices.output.deviceId : null
+          }
+        >
           {renderLogs()}
         </Collapse>
       </Content>
