@@ -89,6 +89,7 @@ const DetailLog = (props) => {
             columns={columns}
             dataSource={room.devices.output.logs}
             key={room.devices.output.deviceId}
+            bordered
           />
         </Panel>
       );

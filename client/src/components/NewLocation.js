@@ -31,7 +31,7 @@ export const NewLocation = ({ locations, setLocations }) => {
       .then(() => {
         const newLocation = {
           name: roomName,
-          sensor: { name: sensorID, lowerBound: 30, upperBound: 70 },
+          sensor: { name: sensorID, lowerBound: 0, upperBound: 100 },
           speaker: { name: speakerID, auto: false },
         };
         setLocations([...locations, newLocation]);
