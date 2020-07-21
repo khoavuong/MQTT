@@ -46,7 +46,7 @@ export const Chart = (props) => {
         let filterData = data.filter((item) =>
           checkinRange(item.timestamp, range)
         );
-        setTemperature(filterData.map((item) => item.temporature));
+        setTemperature(filterData.map((item) => item.temperature));
         setHumidity(filterData.map((item) => item.humidity));
         setTimestamp(
           filterData.map((item) =>
