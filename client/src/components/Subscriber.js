@@ -35,9 +35,6 @@ export const Subscriber = ({ mqttPayload, sensor, setBound }) => {
     clearTimeout(timeOut);
     timeOut = setTimeout(() => {
       setBound(sensor.name, bound[0], bound[1]);
-      message.success(
-        `Update stable range of ${sensor.name} to [${bound}] successfully`
-      );
     }, 2000);
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Collapse, Spin, Alert } from "antd";
+import { Tabs, Collapse, Spin, Alert, message } from "antd";
 import mqtt from "mqtt";
 import { Publisher } from "./Publisher";
 import { Subscriber } from "./Subscriber";
@@ -58,11 +58,12 @@ export const Controller = () => {
 
       const locationsFetch = realData.data.data.rooms.map((location) => {
         return {
+          id: location.id,
           name: location.name,
           sensor: {
             name: location.devices.input.deviceId,
-            lowerBound: 50,
-            upperBound: 70,
+            lowerBound: location.devices.output.temperature.lowerBound,
+            upperBound: location.devices.output.temperature.upperBound,
           },
           speaker: { name: location.devices.output.deviceId, auto: false },
         };
@@ -74,13 +75,32 @@ export const Controller = () => {
 
   const setBound = (name, lowerBound, upperBound) => {
     const newLocations = locations.map((location) => {
-      if (location.sensor.name === name)
+      if (location.sensor.name === name) {
+        iot
+          .patch(
+            `api/users/rooms/${location.id}`,
+            {
+              tempUpperBound: upperBound,
+              tempLowerBound: lowerBound,
+              humiUpperBound: 20,
+              humiLowerBound: 10,
+              mode: "MANUAL",
+            },
+            { headers: { Authorization: localStorage.getItem("accessToken") } }
+          )
+          .then(() => {
+            message.success(
+              `Update stable range of ${name} to [${lowerBound},${upperBound}] successfully`
+            );
+          });
+
         return {
+          id: location.id,
           name: location.name,
           speaker: location.speaker,
           sensor: { name: location.sensor.name, lowerBound, upperBound },
         };
-      else return location;
+      } else return location;
     });
     setLocations(newLocations);
   };
@@ -109,7 +129,6 @@ export const Controller = () => {
   };
 
   const renderAlert = () => {
-    console.log(locations, mqttPayload);
     return mqttPayload.map((device) => {
       for (const location of locations) {
         if (
